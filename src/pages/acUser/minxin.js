@@ -1,6 +1,6 @@
 import * as api from '@/services/acUser.js';
 import { removeEmptyParam } from '@/utils/formater';
-import { message  } from 'antd';
+import { message,Image  } from 'antd';
 import React from 'react';
 import XLSX from 'xlsx';
 import { table } from './table';
@@ -31,10 +31,8 @@ export const trainingList = [
 
 export function renderImg(value, row, index) {
   const data = value;
-  return  (data?'==':'--');
+  return  (data?<Image  width={50} height={50} src={data} />:'--');
 }
-// <Image  width={50} height={50} src={data} />
-// <Image />
 
 export function getGenderLabel(value, row, index) {
   if (_.isNull(value)) return '--'
