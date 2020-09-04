@@ -21,6 +21,7 @@ export const handleQuery = async (params, sorter = {}, filter = {}) => {
     removeEmptyParam(params);
     // todo 后端添加sorter 和filter
     const {data:result} = await api.list({ ...params});
+    console.log(result,'result');
     resp.data = result.records;
     // 没key报错
     resp.data.forEach((item) => {

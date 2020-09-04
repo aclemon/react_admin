@@ -22,14 +22,14 @@ const MenuModel = {
   reducers: {
     getList(state, { payload }) {
       console.log('reduces 同步->', payload);
-      return payload;
+      return { ...state,data: payload};
     },
   },
   // 订阅
   subscriptions: {
     setup ({ dispatch, history }) {
       return history.listen(({ pathname }) => {
-        if (pathname === '/admin/menu') {
+        if (pathname === '/system/menu') {
           dispatch({
             type: 'getRemote',
             payload: {

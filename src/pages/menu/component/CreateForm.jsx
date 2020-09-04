@@ -62,40 +62,58 @@ const CreateForm = (props) => {
         }}
       >
         <Form.Item
-          label="昵称"
-          name="nickName"
-          rules={[{ required: true, message: '输入昵称!' }]}
+          label="父级菜单"
+          name="pid"
+          rules={[{ required: true, message: '输入父级菜单!' }]}
         >
           <Input/>
         </Form.Item>
 
         <Form.Item
-          label="账号"
-          name="username"
-          rules={[{ required: true, message: '输入账号!' }]}
+          label="菜单类型"
+          name="type"
+          rules={[{ required: true, message: '输入菜单类型!' }]}
         >
           <Input/>
         </Form.Item>
 
         <Form.Item
-          label="密码"
-          name="password"
-          rules={[{ required: true, message: '输入密码!' }]}
+          label="菜单标题"
+          name="title"
+          rules={[{ required: true, message: '输入菜单标题!' }]}
         >
-          <Input type= { 'password'}/>
+          <Input />
         </Form.Item>
 
 
         <Form.Item
-          label="手机号码"
-          name="phone"
+          label="组件名称"
+          name="name"
         >
           <Input/>
         </Form.Item>
 
         <Form.Item
-          label="邮箱"
-          name="email"
+          label="组件位置"
+          name="component"
+        >
+          <Input/>
+        </Form.Item>
+        <Form.Item
+          label="组件排序"
+          name="menuSort"
+        >
+          <Input/>
+        </Form.Item>
+        <Form.Item
+          label="图标"
+          name="icon"
+        >
+          <Input/>
+        </Form.Item>
+        <Form.Item
+          label="path"
+          name="地址"
         >
           <Input/>
         </Form.Item>

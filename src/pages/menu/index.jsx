@@ -7,14 +7,15 @@ import { handleQuery, handleRemove, handleExport } from './minxin';
 import CreateForm from './component/CreateForm';
 import * as api from '@/services/role.js';
 
-
-
 import {
   PlusOutlined,
   DownloadOutlined,
 } from '@ant-design/icons';
 
 const TableList = ({ menu, dispatch }) => {
+  console.log(menu,'mmmmmmmmmmmmmmmmmmmmmmm');
+
+
 // hook========================================================
   const formRef = useRef();
   const actionRef = useRef();
@@ -154,8 +155,10 @@ const TableList = ({ menu, dispatch }) => {
             checkable
             onSelect={onSelect}
             onCheck={onCheck}
-            treeData={menu}
-          /></Col>
+            treeData={menu.data}
+          />
+
+        </Col>
         <Col span={18}> <ProTable
           headerTitle={table.title}
           columns={[...table.column, Option]}
