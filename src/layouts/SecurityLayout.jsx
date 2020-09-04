@@ -9,15 +9,19 @@ class SecurityLayout extends React.Component {
   };
 
   componentDidMount() {
+    console.log( this.props,'componentDidMount');
     this.setState({
       isReady: true,
     });
     const { dispatch } = this.props;
 
     if (dispatch) {
-      dispatch({
-        type: 'user/fetchCurrent',
-      });
+      console.log('SecurityLayoutSecurityLayout');
+      // dispatch({
+      //   type: 'user/fetchCurrent',
+      // });
+
+
     }
   }
 
@@ -35,9 +39,9 @@ class SecurityLayout extends React.Component {
       return <PageLoading />;
     }
 
-    if (!isLogin && window.location.pathname !== '/user/login') {
-      return <Redirect to={`/user/login?${queryString}`} />;
-    }
+    // if (!isLogin && window.location.pathname !== '/user/login') {
+    //   return <Redirect to={`/user/login?${queryString}`} />;
+    // }
 
     return children;
   }

@@ -5,4 +5,23 @@ module.exports = {
     page: true,
     REACT_APP_ENV: true,
   },
+  rules: {
+    "indent": [
+      "error",
+      2
+    ],
+    'global-require': 0,
+    'import/no-dynamic-require': 0,
+    'no-restricted-globals': 0,
+    'no-plusplus': 0,
+    'no-unused-vars': 0,
+    'no-use-before-define': 'off',
+    'no-unused-expressions': 'off',
+    'no-param-reassign': 'off',
+    'guard-for-in': 0,
+    'no-restricted-syntax': 0,
+    '@typescript-eslint/no-use-before-define': 0,
+    '@typescript-eslint/no-unused-vars': 0,
+    '@typescript-eslint/no-unused-expressions': 0,
+  },
 };

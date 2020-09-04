@@ -77,6 +77,8 @@ const BasicLayout = props => {
    * constructor
    */
 
+  // console.log(props,'BasicLayoutprops');
+
   useEffect(() => {
     if (dispatch) {
       dispatch({
@@ -103,10 +105,14 @@ const BasicLayout = props => {
   const { formatMessage } = useIntl();
   return (
     <ProLayout
+      // logo
       logo={logo}
       formatMessage={formatMessage}
+      // 菜单的折叠收起事件
       onCollapse={handleMenuCollapse}
+      // menu 菜单的头部点击事件
       onMenuHeaderClick={() => history.push('/')}
+      // 自定义菜单项的 render 方法
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl || !menuItemProps.path) {
           return defaultDom;
@@ -114,6 +120,7 @@ const BasicLayout = props => {
 
         return <Link to={menuItemProps.path}>{defaultDom}</Link>;
       }}
+      // 自定义面包屑的数据
       breadcrumbRender={(routers = []) => [
         {
           path: '/',
@@ -144,7 +151,12 @@ const BasicLayout = props => {
   );
 };
 
-export default connect(({ global, settings }) => ({
-  collapsed: global.collapsed,
-  settings,
-}))(BasicLayout);
+// 1.将仓库的 CrudModal 传递
+const mapStateToProps = ({ global, settings }) => {
+  return {
+    collapsed: global.collapsed,
+    settings,
+  }
+};
+
+export default connect(mapStateToProps)(BasicLayout);

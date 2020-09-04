@@ -27,9 +27,11 @@ const codeMessage = {
  */
 
 const errorHandler = error => {
+  console.log('errorHandler');
   const { response } = error;
 
   if (response && response.status) {
+    console.log(response,'response');
     const errorText = codeMessage[response.status] || response.statusText;
     const { status, url } = response;
     notification.error({
@@ -53,5 +55,8 @@ const request = extend({
   errorHandler,
   // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
+  // 请求数据类型
+  requestType: 'form'
+
 });
 export default request;

@@ -3,6 +3,8 @@ import { history } from 'umi';
 import { accountLogin } from '@/services/login';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
+import {encrypt} from '@/utils/rsaEncrypt';
+import { setToken } from '@/utils/cookies';
 
 const Model = {
   namespace: 'login',
@@ -11,14 +13,19 @@ const Model = {
   },
   effects: {
     *login({ payload }, { call, put }) {
-      const response = yield call(accountLogin, payload);
-      console.log(response,'response')
+      console.log(payload,"payload");
+      let param = {}
+      param = payload
+      param.password = encrypt(param.password);
+      const response = yield call(accountLogin, param);
+      const {data,code} = response
+      setToken(data.token)
       yield put({
         type: 'changeLoginStatus',
-        payload: response,
+        payload: data,
       }); // Login successfully
 
-      if (response.status === 'ok') {
+      if (code=== '000000') {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
@@ -45,9 +52,9 @@ const Model = {
     logout() {
       const { redirect } = getPageQuery(); // Note: There may be security issues, please note
 
-      if (window.location.pathname !== '/user/login' && !redirect) {
+      if (window.location.pathname !== '/login/user' && !redirect) {
         history.replace({
-          pathname: '/user/login',
+          pathname: '/login/user',
           search: stringify({
             redirect: window.location.href,
           }),
@@ -57,8 +64,9 @@ const Model = {
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
-      return { ...state, status: payload.status, type: payload.type };
+      setAuthority('admin');
+
+      return { ...state, status: 'ok', type: 'account' };
     },
   },
 };

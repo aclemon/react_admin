@@ -1,6 +1,6 @@
 {
   "name": "ant-design-pro",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "private": true,
   "description": "An out-of-box UI solution for enterprise applications",
   "scripts": {
@@ -18,7 +18,6 @@
     "lint:js": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
     "lint:prettier": "prettier --check \"**/*\" --end-of-line auto",
     "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
-    "precommit": "lint-staged",
     "prettier": "prettier -c --write \"**/*\"",
     "start": "umi dev",
     "start:dev": "cross-env REACT_APP_ENV=dev MOCK=none umi dev",
@@ -30,7 +29,7 @@
     "test": "umi test",
     "test:all": "node ./tests/run-tests.js",
     "test:component": "umi test ./src/components",
-    "tsc": "tsc"
+    "tsc": "tsc --noEmit"
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
@@ -46,10 +45,13 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^4.0.0",
-    "@ant-design/pro-layout": "^6.4.1",
-    "@ant-design/pro-table": "^2.5.3",
+    "@ant-design/pro-descriptions": "^1.0.4",
+    "@ant-design/pro-layout": "^6.4.8",
+    "@ant-design/pro-table": "^2.5.13",
     "antd": "^4.5.3",
     "classnames": "^2.2.6",
+    "js-cookie": "^2.2.1",
+    "jsencrypt": "^3.0.0-rc.1",
     "lodash": "^4.17.11",
     "moment": "^2.25.3",
     "omit.js": "^2.0.2",
@@ -60,7 +62,8 @@
     "react-helmet-async": "^1.0.4",
     "umi": "^3.2.14",
     "umi-request": "^1.0.8",
-    "use-merge-value": "^1.0.1"
+    "use-merge-value": "^1.0.1",
+    "xlsx": "^0.16.6"
   },
   "devDependencies": {
     "@ant-design/pro-cli": "^1.0.18",
@@ -94,7 +97,8 @@
     "prettier": "^2.0.1",
     "pro-download": "1.0.1",
     "puppeteer-core": "^5.0.0",
-    "stylelint": "^13.0.0"
+    "stylelint": "^13.0.0",
+    "typescript": "^3.9.7"
   },
   "engines": {
     "node": ">=10.0.0"
