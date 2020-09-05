@@ -25,33 +25,30 @@ export default defineConfig({
   targets: {
     ie: 11,
   },
-
   routes: [
     {
       path: '/',
       component: '../layouts/BlankLayout',
       routes: [
-        // {
-        //   path: '/user',
-        //   component: '../layouts/UserLayout',
-        //   routes: [
-        //     {
-        //       path: '/user',
-        //       redirect: '/user/login',
-        //     },
-        //     {
-        //       name: 'login',
-        //       icon: 'smile',
-        //       path: '/user/login',
-        //       component: './login',
-        //     },
-        //     // {
-        //     //   name: 'register',
-        //     //   path: '/user/register',
-        //     //   component: './register',
-        //     // },
-        //   ],
-        // },
+        {
+          path: '/user',
+          component: '../layouts/UserLayout',
+          routes: [
+            {
+              path: '/user',
+              redirect: '/user/login',
+            },
+            {
+              path: '/user/login',
+              component: './login',
+            },
+            // {
+            //   name: 'register',
+            //   path: '/user/register',
+            //   component: './register',
+            // },
+          ],
+        },
         {
           path: '/',
           component: '../layouts/BasicLayout',

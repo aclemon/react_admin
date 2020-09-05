@@ -3,9 +3,14 @@ import * as api from '@/services/menu.js';
 
 let dynamicRoutes = [];
 
+
+
+
 function buildRoutes(authRoutes) {
   return (authRoutes || []).map((item) => {
-    if (item.children && item.children.length > 0) {
+
+    // 2 表示为按钮
+    if (item.children && item.children.length > 0&&item.children[0].type<2) {
       return {
         path: item.path,
         name: item.name,
@@ -15,11 +20,11 @@ function buildRoutes(authRoutes) {
     }
     console.log(`@/pages/user${item.component || item.url}`,'item.component');
     return {
-      path: item.path,
-      name: item.name,
-      component: require(`@/pages${item.component || item.url}`).default,
+      path: item.path||'',
+      name: item.name||'',
+      component:item.component? require(`@/pages${item.component || item.url}`).default:'',
       exact: true,
-    };
+    }
   });
 }
 /**
@@ -33,11 +38,12 @@ export function patchRoutes({ routes }) {
 
   const buidRrr = buildRoutes(dynamicRoutes)
 
-  routes[0].routes[0].routes = [...buidRrr,...routes[0].routes[0].routes,]
+  // console.log(buidRrr,'buidRrr');
 
-  console.log(buidRrr,'buidRrr');
+  routes[0].routes[1].routes = [...buidRrr,...routes[0].routes[0].routes,]
 
-  console.log(routes[0].routes[0],'routes[0].routes[0].routes');
+
+  console.log(routes[0].routes[1],'routes[0].routes[0].routes');
 }
 
 

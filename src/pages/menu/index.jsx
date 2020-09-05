@@ -160,6 +160,7 @@ const TableList = ({ menu, dispatch }) => {
 
         </Col>
         <Col span={18}> <ProTable
+          pagination={false}
           headerTitle={table.title}
           columns={[...table.column, Option]}
           columnsStateMap={columnsStateMap}
@@ -174,8 +175,8 @@ const TableList = ({ menu, dispatch }) => {
           // tableAlertRender={false}
 
 
-          rowSelection={{
 
+          rowSelection={{
             // type:'radio',
             // 选择下拉框
             // selections:[

@@ -19,6 +19,8 @@ const Model = {
       param.password = encrypt(param.password);
       const response = yield call(accountLogin, param);
       const {data,code} = response
+      localStorage.setItem('token',data.token)
+      console.log(data.token,'data.token');
       setToken(data.token)
       yield put({
         type: 'changeLoginStatus',
@@ -52,9 +54,9 @@ const Model = {
     logout() {
       const { redirect } = getPageQuery(); // Note: There may be security issues, please note
 
-      if (window.location.pathname !== '/login/user' && !redirect) {
+      if (window.location.pathname !== '/user/login' && !redirect) {
         history.replace({
-          pathname: '/login/user',
+          pathname: '/user/login',
           search: stringify({
             redirect: window.location.href,
           }),
