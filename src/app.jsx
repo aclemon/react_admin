@@ -39,6 +39,8 @@ export function patchRoutes({ routes }) {
 
   const buidRrr = buildRoutes(dynamicRoutes)
 
+  console.log(buidRrr,'buidRrr');
+
 
   routes[0].routes[1].routes = [...routes[0].routes[1].routes,...buidRrr]
 
