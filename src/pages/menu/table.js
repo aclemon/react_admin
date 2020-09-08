@@ -1,10 +1,11 @@
-
+import { renderIcon } from '@/utils/mixin'
 export const table = {
   title:'菜单表',
   column:[
     {
       title: '标题',
       dataIndex: 'title',
+      width: 200
     },
     {
       title: '名称',
@@ -21,6 +22,7 @@ export const table = {
     {
       title: '图标',
       dataIndex: 'icon',
+      render: renderIcon
     },
     {
       title: '访问路径',
@@ -38,10 +40,12 @@ export const table = {
     {
       title: '创建时间',
       dataIndex: 'createTime',
+      valueType: 'dateTime'
     },
     {
       title: '修改时间',
       dataIndex: 'updateTime',
+      valueType: 'dateTime',
     },
     {
       title: '创建人',

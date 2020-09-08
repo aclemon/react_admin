@@ -14,7 +14,8 @@ function buildRoutes(authRoutes) {
       return {
         path: item.path,
         name: item.name,
-        exact: false,
+        // 精准匹配
+        exact:  false,
         routes: buildRoutes(item.children),
       };
     }
@@ -22,8 +23,8 @@ function buildRoutes(authRoutes) {
     return {
       path: item.path||'',
       name: item.name||'',
+      exact:  true,
       component:item.component? require(`@/pages${item.component || item.url}`).default:'',
-      exact: true,
     }
   });
 }
@@ -38,9 +39,8 @@ export function patchRoutes({ routes }) {
 
   const buidRrr = buildRoutes(dynamicRoutes)
 
-  // console.log(buidRrr,'buidRrr');
 
-  routes[0].routes[1].routes = [...buidRrr,...routes[0].routes[0].routes,]
+  routes[0].routes[1].routes = [...routes[0].routes[1].routes,...buidRrr]
 
 
   console.log(routes[0].routes[1],'routes[0].routes[0].routes');

@@ -158,7 +158,7 @@ const TableList = ({ acDept, dispatch }) => {
           <Tree
             onSelect={onSelect}
             onCheck={onCheck}
-            treeData={acDept}
+            treeData={acDept.data}
           />
 
         </Col>

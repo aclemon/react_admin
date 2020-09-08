@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Modal, Form, Input, Slider, Select, message, DatePicker } from 'antd';
+import { Modal, Form, Input, Slider, Select, message, DatePicker,Tree } from 'antd';
 import { labelList } from '@/pages/user/minxin';
 import _ from 'lodash'
 
@@ -9,7 +9,9 @@ const { RangePicker } = DatePicker;
 
 const CreateForm = (props) => {
   const [form] = Form.useForm();
-  const { modalVisible, onCancel, onFinish, formRecord, formRef } = props;
+  const { modalVisible, onCancel, onFinish, formRecord, formRef,menuTree } = props;
+
+  console.log(menuTree,'menuTree');
 
   const onOkTime = () => {
   };
@@ -23,6 +25,14 @@ const CreateForm = (props) => {
   const onFinishFailed = (errorInfo) => {
     console.log(errorInfo);
     message.error(errorInfo.errorFields[0].errors[0]);
+  };
+
+  const onSelect = (selectedKeys, info) => {
+    console.log('selected', selectedKeys, info);
+  };
+
+  const onCheck = (checkedKeys, info) => {
+    console.log('onCheck', checkedKeys, info);
   };
 
   /**
@@ -62,27 +72,24 @@ const CreateForm = (props) => {
         }}
       >
         <Form.Item
-          label="昵称"
-          name="nickName"
-          rules={[{ required: true, message: '输入昵称!' }]}
+          label="角色名称"
+          name="name"
+          rules={[{ required: true, message: '输入角色名称!' }]}
         >
           <Input/>
         </Form.Item>
-
         <Form.Item
-          label="账号"
-          name="username"
-          rules={[{ required: true, message: '输入账号!' }]}
+          label="角色等级"
+          name="level"
+          rules={[{ required: true, message: '输入角色等级!' }]}
         >
           <Input/>
         </Form.Item>
-
         <Form.Item
-          label="密码"
-          name="password"
-          rules={[{ required: true, message: '输入密码!' }]}
+          label="角色描述"
+          name="description"
         >
-          <Input type= { 'password'}/>
+          <Input />
         </Form.Item>
 
 
@@ -94,12 +101,23 @@ const CreateForm = (props) => {
         </Form.Item>
 
         <Form.Item
-          label="邮箱"
-          name="email"
+          label="数据权限范围"
+          name="dataScope"
         >
           <Input/>
         </Form.Item>
 
+        <Form.Item
+          label="菜单范围"
+          name="menus"
+        >
+          <Tree
+            checkable
+            onSelect={onSelect}
+            onCheck={onCheck}
+            treeData={menuTree}
+          />
+        </Form.Item>
 
       </Form>
     </Modal>

@@ -50,31 +50,28 @@ export default defineConfig({
           ],
         },
         {
+
+          path: '/',
+          component: '../layouts/SecurityLayout',
+          routes: [
+            {
           path: '/',
           component: '../layouts/BasicLayout',
           routes: [
+            {
+              path: '/',
+              redirect: '/welcome',
+            },
+            {
+              path: '/welcome',
+              name: 'welcome',
+              icon: 'smile',
+              component: './index',
+            },
+
             // {
-            //   path: '/system',
-            //   name: 'system',
-            //   routes: [
-                // {
-                //   path:'user',
-                //   name:'user',
-                //   component:'./user'
-                // },
-                // {
-                //   path:'role',
-                //   name:'role',
-                //   component:'./role'
-                // },
-                // {
-                //   path:'menu',
-                //   name:'menu',
-                //   component:'./menu'
-                // }
-                {
-                  component: './exception/404'
-                }
+            //   component: './exception/404'
+            // }
               ]
             },
           ],

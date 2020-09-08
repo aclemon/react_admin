@@ -6,6 +6,76 @@ import XLSX from 'xlsx';
 import { table } from './table';
 
 // method======================================================
+
+
+
+export const menuList = [
+  { id: 0, value: '一级菜单' },
+  { id: 1, value: '子菜单' },
+  { id: 2, value: '权限按钮' },
+]
+
+
+
+
+
+// 新建菜单->选择父级菜单时的数据->格式化
+export const formatData = data => {
+  console.log('formatData',data);
+  if (Array.isArray(data)) {
+    return filterData(data).map(item => {
+      return item.children
+        ? {
+          title: item.title,
+          value: item.treeId,
+          // key: item.key,
+          children: formatData(item.children),
+        }
+        : {
+          title: item.title,
+          value: item.treeId,
+          // key: item.key,
+        };
+    });
+  }
+  return [];
+};
+// 新建按钮级权限->选择页面时的数据->格式化
+export const formatPageData = data => {
+  if (Array.isArray(data)) {
+    return data.map(item => {
+      return {
+        title: item.name,
+        value: item.id,
+        key: item.id,
+        children: item.resourceType === 'button' ? null : formatPageData(item.children),
+        selectable: item.resourceType === 'button',
+      };
+    });
+  }
+  return [];
+};
+// const treeData = allmenus.length === 0 ? [] : formateData(allmenus);
+// const pageData = allmenus.length === 0 ? [] : formatePageData(allmenus);
+
+
+
+
+const filterData = array => {
+  return array.filter(item => {
+    //  0代表menu
+    return item.type === 0 ;
+  });
+};
+
+
+
+
+
+
+
+
+
 /**
  * 查询
  * @param params
@@ -20,9 +90,10 @@ export const handleQuery = async (params, sorter = {}, filter = {}) => {
     console.log(params, sorter, filter, 'params, sorter, filter');
     removeEmptyParam(params);
     // todo 后端添加sorter 和filter
-    const {data:result} = await api.list({ ...params});
+    const {data:result} = await api.list({...params});
     console.log(result,'result');
-    resp.data = result.records;
+    resp.data = result.records
+
     // 没key报错
     resp.data.forEach((item) => {
       item.key = item.menuId;

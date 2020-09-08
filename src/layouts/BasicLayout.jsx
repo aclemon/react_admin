@@ -64,6 +64,7 @@ const defaultFooterDom = (
   />
 );
 
+
 const BasicLayout = props => {
   const {
     dispatch,
@@ -76,9 +77,6 @@ const BasicLayout = props => {
   /**
    * constructor
    */
-
-  // console.log(props,'BasicLayoutprops');
-
   useEffect(() => {
     if (dispatch) {
       dispatch({

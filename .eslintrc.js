@@ -10,6 +10,7 @@ module.exports = {
       "error",
       2
     ],
+    'react/react-in-jsx-scope': 0,
     'global-require': 0,
     'import/no-dynamic-require': 0,
     'no-restricted-globals': 0,

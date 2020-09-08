@@ -9,6 +9,7 @@ export const table = {
     {
       title: '访谈日期',
       dataIndex: 'interviewDate',
+      valueType:'dateTime'
     },
     {
       title: '访谈人员',

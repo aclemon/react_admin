@@ -5,6 +5,7 @@ export default {
   'menu.home': '首页',
   'menu.system': '系统管理页',
   'menu.mnt': '管理页',
+  'menu.index': '欢迎光临',
   'menu.mnt.acDept': '部门管理',
   'menu.mnt.acUser': '人员管理',
   'menu.mnt.acCheck': '检查情况',

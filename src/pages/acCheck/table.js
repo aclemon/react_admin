@@ -22,6 +22,7 @@ export const table = {
     {
       title: '检查日期',
       dataIndex: 'checkTime',
+      valueType:'dateTime'
     },
     {
       title: '检查次数',

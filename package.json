@@ -45,6 +45,7 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^4.0.0",
+    "@ant-design/icons-react": "^2.0.1",
     "@ant-design/pro-descriptions": "^1.0.4",
     "@ant-design/pro-layout": "^6.4.8",
     "@ant-design/pro-table": "^2.5.13",

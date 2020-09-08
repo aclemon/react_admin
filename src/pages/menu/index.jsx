@@ -1,20 +1,23 @@
 import React, { useState, useRef } from 'react';
-import { Card, Typography, Alert, Button, message, Popconfirm, Divider,Tree,Row,Col } from 'antd';
+import { Card, Typography, Alert, Button, message, Popconfirm, Divider,Tree,Row,Col,Table,Modal } from 'antd';
 import { connect } from 'umi';
 import ProTable from '@ant-design/pro-table';
 import { table } from './table';
 import { handleQuery, handleRemove, handleExport } from './minxin';
 import CreateForm from './component/CreateForm';
-import * as api from '@/services/role.js';
+import * as api from '@/services/menu.js';
+import IconPreview from '@/components/IconPreview';
 
 import {
   PlusOutlined,
   DownloadOutlined,
 } from '@ant-design/icons';
+import _ from 'lodash';
 
 const TableList = ({ menu, dispatch }) => {
   console.log(menu,'mmmmmmmmmmmmmmmmmmmmmmm');
-
+  //
+  const allmenus = menu.data ? menu.data : [];
 
 // hook========================================================
   const formRef = useRef();
@@ -23,6 +26,7 @@ const TableList = ({ menu, dispatch }) => {
   const createFormRef = useRef();
   const [createForm, setCreateForm] = useState({});
   const [modalVisible, handleModalVisible] = useState(false);
+  const [iconVisible, handleIconVisible] = useState(false);
   // 文件上传文件列表
   const [fileList, setFileList] = useState([]);
   const [columnsStateMap, setColumnsStateMap] = useState(
@@ -53,6 +57,16 @@ const TableList = ({ menu, dispatch }) => {
   };
 
 
+
+
+
+
+
+
+
+
+
+
   /**
    * 新增
    * @param fields
@@ -60,16 +74,20 @@ const TableList = ({ menu, dispatch }) => {
    */
   const handleAdd = async (fields) => {
     const hide = message.loading('正在添加');
+    console.log(fields,'fields');
+
     try {
       const res = await api.add(fields);
-
       hide();
-      handleModalVisible(false);
-      message.success('添加成功');
-      actionRef.current.reload();
-      return true;
+      if (res.data){
+        message.success('添加成功');
+        handleModalVisible(false);
+        actionRef.current.reload();
+      }else {
+        message.error('添加失败请重试！');
+      }
+      return res.data;
     } catch (error) {
-      hide();
       message.error('添加失败请重试！');
       return false;
     }
@@ -89,8 +107,12 @@ const TableList = ({ menu, dispatch }) => {
     try {
       const resp = await api.update(param);
       hide();
-      message.success('更新成功');
-      actionRef.current.reload();
+      if(resp.data){
+        message.success('更新成功');
+        actionRef.current.reload();
+      } else {
+        message.error('后端更新失败失败请重试！');
+      }
       return resp.data;
     } catch (error) {
       hide();
@@ -98,6 +120,53 @@ const TableList = ({ menu, dispatch }) => {
       return false;
     }
   };
+
+
+  /**
+   * 新增
+   * @param fields
+   * @returns {Promise<boolean>}
+   */
+  // const handleAdd = async (fields) => {
+  //   const hide = message.loading('正在添加');
+  //   try {
+  //     const res = await api.add(fields);
+  //
+  //     hide();
+  //     handleModalVisible(false);
+  //     message.success('添加成功');
+  //     actionRef.current.reload();
+  //     return true;
+  //   } catch (error) {
+  //     hide();
+  //     message.error('添加失败请重试！');
+  //     return false;
+  //   }
+  // };
+  //
+  // /**
+  //  * 更新createForm
+  //  * @param fields
+  //  * @returns {Promise<boolean>}
+  //  */
+  // const handleUpdate = async (fields) => {
+  //   const hide = message.loading('正在更新');
+  //   console.log(fields, 'fields');
+  //   const param = fields;
+  //   param.id = fields.key;
+  //   delete param.key;
+  //   try {
+  //     const resp = await api.update(param);
+  //     hide();
+  //     message.success('更新成功');
+  //     actionRef.current.reload();
+  //     return resp.data;
+  //   } catch (error) {
+  //     hide();
+  //     message.error('更新失败请重试！');
+  //     return false;
+  //   }
+  // };
 
   const onSelect = (selectedKeys, info) => {
     console.log('selected', selectedKeys, info);
@@ -146,6 +215,21 @@ const TableList = ({ menu, dispatch }) => {
         </>
       ),
     };
+
+  const [checkStrictly, setCheckStrictly] = React.useState(false);
+  const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+    onSelect: (record, selected, selectedRows) => {
+      console.log(record, selected, selectedRows);
+    },
+    onSelectAll: (selected, selectedRows, changeRows) => {
+      console.log(selected, selectedRows, changeRows);
+    },
+  };
+
+
   return (
     <div>
 
@@ -159,7 +243,16 @@ const TableList = ({ menu, dispatch }) => {
           />
 
         </Col>
-        <Col span={18}> <ProTable
+        <Col span={18}>
+
+          <Table
+            columns={table.column}
+            rowSelection={{ ...rowSelection, checkStrictly }}
+            dataSource={menu.data}
+          />
+
+
+          <ProTable
           pagination={false}
           headerTitle={table.title}
           columns={[...table.column, Option]}
@@ -173,17 +266,13 @@ const TableList = ({ menu, dispatch }) => {
           actionRef={actionRef}
           //  自定义 table 的 alert设置或者返回false 即可关闭
           // tableAlertRender={false}
-
-
-
           rowSelection={{
             // type:'radio',
             // 选择下拉框
             // selections:[
             //
             // ]
-          }
-          }
+          }}
           request={(params, sort, filter) => {
             const data = handleQuery(params, sort, filter);
             return data;
@@ -215,19 +304,31 @@ const TableList = ({ menu, dispatch }) => {
               </Popconfirm>
             ),
           ]}
-        /></Col>
+        />
 
+        </Col>
       </Row>
-
-
-
       <CreateForm
         formRef={createFormRef}
-        formRecord={createForm}
+        // formRecord={createForm}
+        currentRecord={createForm}
         modalVisible={modalVisible}
+        showModal={()=>{
+          handleIconVisible(true)
+        }}
+        allmenus={allmenus}
         onCancel={onCancel}
         onFinish={onFinish}
+
       />
+
+      <Modal width={900} visible={iconVisible} onCancel={()=>{
+        handleIconVisible(false)
+      }} footer={null}>
+        <IconPreview onCancel={()=>{
+          handleIconVisible(false)
+        }} />
+      </Modal>
     </div>);
 };
 

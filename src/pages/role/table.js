@@ -25,18 +25,25 @@ export const table = {
     {
       title: '创建时间',
       dataIndex: 'createTime',
+      // 控制显示与隐藏需要进行设置
+      key:'createTime',
+      valueType: 'dateTime'
     },
     {
       title: '修改时间',
       dataIndex: 'updateTime',
+      key:'updateTime',
+      valueType: 'dateTime'
     },
     {
       title: '创建人',
       dataIndex: 'createBy',
+      key: 'createBy',
     },
     {
       title: '修改人',
       dataIndex: 'updateBy',
+      key: 'updateBy',
     },
     // ==================================================
   ],

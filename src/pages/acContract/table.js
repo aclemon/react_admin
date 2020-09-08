@@ -1,4 +1,4 @@
-
+import {renderSwitch} from '@/utils/mixin'
 export const table = {
   title:'部门管理表',
   column:[
@@ -21,30 +21,37 @@ export const table = {
     {
       title: '合同开始日期',
       dataIndex: 'contractStartTime',
+      valueType:'dateTime'
     },
     {
       title: '合同结束日期',
       dataIndex: 'contractEndTime',
+      valueType:'dateTime'
     },
     {
       title: '自动延期',
       dataIndex: 'autoDelay',
+      render: renderSwitch
     },
     {
       title: '购买外包保险',
       dataIndex: 'enabledInsurance',
+      render: renderSwitch
     },
     {
       title: '保险结束日期',
       dataIndex: 'insuranceEndTime',
+      valueType: 'dateTime'
     },
     {
       title: '集中采购日期',
       dataIndex: 'purchaseStartTime',
+      valueType: 'dateTime'
     },
     {
       title: '集中采购到期日',
       dataIndex: 'purchaseEndTime',
+      valueType: 'dateTime'
     },
 
     // ===============================================

@@ -5,6 +5,9 @@ const MenuModel = {
   namespace: 'menu',
   state: {
     data: [],
+    pageSize: 10,
+    total:100,
+    current:1
   },
   effects: {
     *getRemote ({ payload: { param, sorter = {}, filter = {} } }, { put, call }) {

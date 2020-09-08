@@ -4,7 +4,7 @@ import { accountLogin } from '@/services/login';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import {encrypt} from '@/utils/rsaEncrypt';
-import { setToken } from '@/utils/cookies';
+import { removeToken, setToken } from '@/utils/cookies';
 
 const Model = {
   namespace: 'login',
@@ -53,6 +53,7 @@ const Model = {
 
     logout() {
       const { redirect } = getPageQuery(); // Note: There may be security issues, please note
+      removeToken()
 
       if (window.location.pathname !== '/user/login' && !redirect) {
         history.replace({

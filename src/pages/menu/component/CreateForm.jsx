@@ -1,20 +1,24 @@
 import React, { useEffect } from 'react';
-import { Modal, Form, Input, Slider, Select, message, DatePicker } from 'antd';
-import { labelList } from '@/pages/user/minxin';
+import { Modal, Form, Input, Slider, Select, message, DatePicker, TreeSelect, Col } from 'antd';
+import { menuList,formatData } from '@/pages/menu/minxin';
 import _ from 'lodash'
+import func from '@/utils/Func.js';
+import { trainingList } from '@/pages/acUser/minxin';
+
+
+
+
 
 const { Option } = Select;
-const { TextArea } = Input;
+const { TextArea,Search } = Input;
 const { RangePicker } = DatePicker;
+const FormItem = Form.Item;
 
 const CreateForm = (props) => {
   const [form] = Form.useForm();
-  const { modalVisible, onCancel, onFinish, formRecord, formRef } = props;
+  const { modalVisible, onCancel, onFinish, formRecord, formRef,isPageAuth,allmenus,showModal } = props;
 
-  const onOkTime = () => {
-  };
-  const onChange = () => {
-  };
+
 
   const onOK = () => {
     form.submit();
@@ -37,6 +41,13 @@ const CreateForm = (props) => {
     }
   }, [modalVisible]);
 
+  const treeData = allmenus.length === 0 ? [] : formatData(allmenus);
+  treeData.unshift({
+    title: '无',
+    value: -1,
+    // key: -1,
+  });
+
   return (
     <Modal
       maskClosable={false}
@@ -50,6 +61,7 @@ const CreateForm = (props) => {
       }}
       layout="horizontal"
     >
+
       <Form
         name="basic"
         ref={formRef}
@@ -66,15 +78,25 @@ const CreateForm = (props) => {
           name="pid"
           rules={[{ required: true, message: '输入父级菜单!' }]}
         >
-          <Input/>
+          <TreeSelect
+
+            // value={this.state.value}
+            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+            treeData={treeData}
+            placeholder="请选择"
+            treeDefaultExpandAll
+          />
         </Form.Item>
 
-        <Form.Item
-          label="菜单类型"
-          name="type"
-          rules={[{ required: true, message: '输入菜单类型!' }]}
-        >
-          <Input/>
+
+        <Form.Item label="菜单类型" name="type" rules={[{ required: true, message: '选择菜单类型!' }]}>
+          <Select>
+            {menuList.map((item, index) => (
+              <Select.Option key={index} value={item.id}>
+                {item.value}
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <Form.Item
@@ -85,7 +107,7 @@ const CreateForm = (props) => {
           <Input />
         </Form.Item>
 
-
+        {/* 用于locals */}
         <Form.Item
           label="组件名称"
           name="name"
@@ -105,20 +127,26 @@ const CreateForm = (props) => {
         >
           <Input/>
         </Form.Item>
+
+        <Form.Item
+          label="访问地址"
+          name="path"
+        >
+          <Input/>
+        </Form.Item>
         <Form.Item
           label="图标"
           name="icon"
         >
-          <Input/>
+          <Search
+            // prefix={
+            //   <AntdIcon type={'setting'} />
+            // }
+            placeholder="请选择菜单图标"
+            onSearch={showModal}
+            enterButton
+          />
         </Form.Item>
-        <Form.Item
-          label="path"
-          name="地址"
-        >
-          <Input/>
-        </Form.Item>
-
-
       </Form>
     </Modal>
   );

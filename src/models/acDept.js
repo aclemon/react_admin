@@ -23,7 +23,7 @@ const AcDeptModel = {
     getList(state, { payload }) {
       console.log('reduces 同步->', payload);
 
-      return payload;
+      return {...state,data:payload};
     },
   },
   // 订阅

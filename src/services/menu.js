@@ -30,7 +30,7 @@ export const update = (params)=>{
 }
 
 export const getMenuTree = ()=>{
-  return request(`/api/menu/tree`, {
+  return request(`/api/menu/currentUser/tree`, {
     method:'get',
   });
 }
