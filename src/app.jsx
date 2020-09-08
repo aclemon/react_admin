@@ -42,10 +42,10 @@ export function patchRoutes({ routes }) {
   console.log(buidRrr,'buidRrr');
 
 
-  routes[0].routes[1].routes = [...routes[0].routes[1].routes,...buidRrr]
+  routes[0].routes[1].routes[0].routes = [...routes[0].routes[1].routes[0].routes,...buidRrr]
 
 
-  console.log(routes[0].routes[1],'routes[0].routes[0].routes');
+  // console.log(routes[0].routes[1],'routes[0].routes[0].routes');
 }
 
 

@@ -51,10 +51,10 @@ export default defineConfig({
         },
         {
 
-          // path: '/',
-          // component: '../layouts/SecurityLayout',
-          // routes: [
-          //   {
+          path: '/',
+          component: '../layouts/SecurityLayout',
+          routes: [
+            {
           path: '/',
           component: '../layouts/BasicLayout',
           routes: [
@@ -72,8 +72,8 @@ export default defineConfig({
             // {
             //   component: './exception/404'
             // }
-            //   ]
-            // },
+              ]
+            },
           ],
         },
 
