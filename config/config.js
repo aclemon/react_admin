@@ -55,31 +55,31 @@ export default defineConfig({
           component: '../layouts/SecurityLayout',
           routes: [
             {
-          path: '/',
-          component: '../layouts/BasicLayout',
-          routes: [
-            {
               path: '/',
-              redirect: '/welcome',
-            },
-            {
-              path: '/welcome',
-              name: 'welcome',
-              icon: 'smile',
-              component: './index',
-            },
+              component: '../layouts/BasicLayout',
+              routes: [
+                {
+                  path: '/',
+                  redirect: '/welcome',
+                },
+                {
+                  path: '/welcome',
+                  name: 'welcome',
+                  icon: 'smile',
+                  component: './index',
+                },
 
-            // {
-            //   component: './exception/404'
-            // }
-              ]
+                // {
+                //   component: './exception/404'
+                // }
+              ],
             },
           ],
         },
 
       ],
-
-
+    },
+  ],
 
 
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
