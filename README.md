@@ -26,6 +26,8 @@ Scripts provided in `package.json`. It's safe to modify or add additional script
 
 ```bash
 npm start
+账号：admin
+密码：123456
 ```
 
 ### Build project

@@ -2,15 +2,16 @@ import React, { useEffect } from 'react';
 import { Modal, Form, Input, Slider, Select, message, DatePicker } from 'antd';
 import { labelList } from '@/pages/user/minxin';
 import _ from 'lodash'
+import { trainingList } from '@/pages/acUser/minxin';
 
 const { Option } = Select;
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
 
 const CreateForm = (props) => {
-  const [form] = Form.useForm();
-  const { modalVisible, onCancel, onFinish, formRecord, formRef } = props;
 
+  const [form] = Form.useForm();
+  const { modalVisible, onCancel, onFinish, formRecord, formRef,roles } = props;
   const onOkTime = () => {
   };
   const onChange = () => {
@@ -36,6 +37,11 @@ const CreateForm = (props) => {
       form.setFieldsValue(formRecord);
     }
   }, [modalVisible]);
+
+  const children = [];
+  for (let i = 10; i < 36; i++) {
+    children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
+  }
 
   return (
     <Modal
@@ -82,7 +88,7 @@ const CreateForm = (props) => {
           name="password"
           rules={[{ required: true, message: '输入密码!' }]}
         >
-          <Input type= { 'password'}/>
+          <Input type= "password"/>
         </Form.Item>
 
 
@@ -98,6 +104,29 @@ const CreateForm = (props) => {
           name="email"
         >
           <Input/>
+        </Form.Item>
+
+        <Form.Item
+          label="角色"
+          name="roleIds"
+          rules={[
+            {
+              required: true,
+              message: 'Please select your roles!',
+              type: 'array',
+            },
+          ]}
+        >
+          <Select             mode="multiple"
+            allowClear
+            placeholder="Please select role">
+            {roles.map((item, index) => (
+              <Select.Option key={index} value={item.roleId}>
+                {item.name}
+              </Select.Option>
+            ))}
+          </Select>
+
         </Form.Item>
 
 

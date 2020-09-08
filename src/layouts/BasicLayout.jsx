@@ -80,7 +80,21 @@ const BasicLayout = props => {
   useEffect(() => {
     if (dispatch) {
       dispatch({
-        type: 'user/fetchCurrent',
+        type: 'role/fetchRoles',
+        payload: {
+          param: {
+            pageSize: 100,
+            current:1
+          },
+        },
+      });
+
+      dispatch({
+        type: 'menu/getRemote',
+        payload: {
+          param: {
+          },
+        },
       });
     }
   }, []);

@@ -45,9 +45,9 @@ class SecurityLayout extends React.Component {
 }
 
 export default connect(({ user, loading }) => {
-    console.log(loading,'loading');
-    return{
-      currentUser: user.currentUser,
-        loading: loading.models.user,
-    }
+  console.log(loading,'loading');
+  return{
+    currentUser: user.currentUser,
+    loading: loading.models.user,
+  }
 })(SecurityLayout);

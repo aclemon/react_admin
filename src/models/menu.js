@@ -29,20 +29,20 @@ const MenuModel = {
     },
   },
   // 订阅
-  subscriptions: {
-    setup ({ dispatch, history }) {
-      return history.listen(({ pathname }) => {
-        if (pathname === '/system/menu') {
-          dispatch({
-            type: 'getRemote',
-            payload: {
-              param: {
-              },
-            },
-          });
-        }
-      });
-    },
-  },
+  // subscriptions: {
+  //   setup ({ dispatch, history }) {
+  //     return history.listen(({ pathname }) => {
+  //       if (pathname === '/system/menu') {
+  //         dispatch({
+  //           type: 'getRemote',
+  //           payload: {
+  //             param: {
+  //             },
+  //           },
+  //         });
+  //       }
+  //     });
+  //   },
+  // },
 }
 export default MenuModel;

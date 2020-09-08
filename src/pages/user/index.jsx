@@ -14,7 +14,9 @@ import {
   DownloadOutlined,
 } from '@ant-design/icons';
 
-const TableList = ({ user, dispatch }) => {
+const TableList = ({ user,role, dispatch }) => {
+
+  console.log(role,'rrrrrrrrrr');
 // hook========================================================
   const formRef = useRef();
   const actionRef = useRef();
@@ -196,6 +198,7 @@ const TableList = ({ user, dispatch }) => {
         ]}
       />
       <CreateForm
+        roles={role.data||[]}
         formRef={createFormRef}
         formRecord={createForm}
         modalVisible={modalVisible}
@@ -206,9 +209,10 @@ const TableList = ({ user, dispatch }) => {
 };
 
 // 1.将仓库的 CrudModal 传递
-const mapStateToProps = ({ user, loading }) => {
+const mapStateToProps = ({ user,role ,loading }) => {
+  console.log(role,'rolerole');
   return {
-    user,
+    user,role
   };
 };
 
