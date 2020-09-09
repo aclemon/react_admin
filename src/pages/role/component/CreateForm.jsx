@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { Modal, Form, Input, Slider, Select, message, DatePicker,Tree } from 'antd';
+import { Modal, Form, Input, Slider, Select, message, DatePicker,Tree,TreeSelect  } from 'antd';
 import { labelList } from '@/pages/user/minxin';
 import _ from 'lodash'
 
 const { Option } = Select;
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
-
+const { SHOW_ALL } = TreeSelect;
 const CreateForm = (props) => {
   const [form] = Form.useForm();
   const { modalVisible, onCancel, onFinish, formRecord, formRef,menuTree } = props;
@@ -27,13 +27,25 @@ const CreateForm = (props) => {
     message.error(errorInfo.errorFields[0].errors[0]);
   };
 
-  const onSelect = (selectedKeys, info) => {
-    console.log('selected', selectedKeys, info);
+  const onCheck = (checkedKeys, info) => {
+    // console.log('onCheck', checkedKeys, info);
+    const checkedIds =  checkedKeys.map(item=>{
+      return  _.toNumber(_.replace(item, 'menu:', ''))
+    })
+    form.setFieldsValue({ menus:checkedIds })
   };
 
-  const onCheck = (checkedKeys, info) => {
-    console.log('onCheck', checkedKeys, info);
+  const checkEvent = e => {
+    console.log('Upload evessssssssssssssnt:', e);
+
+    if (Array.isArray(e)) {
+      return e;
+    }
+
+    return e && e.checkedKeys;
   };
+
+
 
   /**
    * 根据接收到的参数进行判断
@@ -94,28 +106,32 @@ const CreateForm = (props) => {
 
 
         <Form.Item
-          label="手机号码"
-          name="phone"
-        >
-          <Input/>
-        </Form.Item>
-
-        <Form.Item
-          label="数据权限范围"
+          label="权限范围"
           name="dataScope"
         >
           <Input/>
         </Form.Item>
 
+        {/*<Form.Item*/}
+        {/*  label="菜单范围"*/}
+        {/*  name="menus"*/}
+        {/*>*/}
+        {/*  <Tree*/}
+        {/*    checkable*/}
+        {/*    onCheck={onCheck}*/}
+        {/*    treeData={menuTree}*/}
+        {/*    defaultCheckedKeys={roleCheckKeys}*/}
+        {/*  />*/}
+        {/*</Form.Item>*/}
         <Form.Item
           label="菜单范围"
-          name="menus"
+          name="menuIds"
         >
-          <Tree
-            checkable
-            onSelect={onSelect}
-            onCheck={onCheck}
+          <TreeSelect
+            showCheckedStrategy={SHOW_ALL}
             treeData={menuTree}
+            treeCheckable
+            placeholder='Please select'
           />
         </Form.Item>
 

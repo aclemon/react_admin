@@ -61,7 +61,7 @@ const request = extend({
     Authorization: `${getToken()}`
   },
   // 请求数据类型
-  requestType: 'form'
+  // requestType: 'form'
 
 });
 export default request;

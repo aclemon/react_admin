@@ -1,4 +1,4 @@
-import { renderSwitch } from '@/utils/mixin';
+import { renderSwitch,renderTags } from '@/utils/mixin';
 
 export const table = {
   title:'用户表',
@@ -27,6 +27,11 @@ export const table = {
     {
       title: '电话',
       dataIndex: 'phone',
+    },
+    {
+      title: '角色',
+      dataIndex: 'roles',
+      render: renderTags
     },
     // ===============================================
     // ===============================================

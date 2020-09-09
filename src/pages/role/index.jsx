@@ -13,11 +13,13 @@ import {
   PlusOutlined,
   DownloadOutlined,
 } from '@ant-design/icons';
+import _ from 'lodash';
 
 const TableList = (props) => {
-  console.log(props,'roleprops');
-  const menu =props.menu
+
+  const {menu} = props
 // hook========================================================
+
   const formRef = useRef();
   const actionRef = useRef();
   // ModelForm
@@ -28,8 +30,10 @@ const TableList = (props) => {
   const [fileList, setFileList] = useState([]);
   const [columnsStateMap, setColumnsStateMap] = useState(
     {
-      createdAt: { show: false },
-      finishedAt: { show: false },
+      createBy: { show: false,fixed: "right" },
+      createTime: { show: false,fixed: "right" },
+      updateBy: { show: false },
+      updateTime: { show: false },
     });
 
 
@@ -39,7 +43,7 @@ const TableList = (props) => {
   };
   // key
   const onFinish = async (values) => {
-
+    console.log(values,'addVlll');
     const { key } = createForm;
     let res;
     if (key) {
@@ -48,6 +52,9 @@ const TableList = (props) => {
       param.key = key;
       res = await handleUpdate(param);
     } else {
+     values.menuIds =  values.menuIds.map(item=>{
+        return  _.toNumber(_.replace(item, 'menu:', ''))
+      })
       res = await handleAdd(values);
     }
     res ? onCancel() : '';
@@ -198,7 +205,7 @@ const TableList = (props) => {
         ]}
       />
       <CreateForm
-        menuTree={menu.data}
+        menuTree={menu.allData}
         formRef={createFormRef}
         formRecord={createForm}
         modalVisible={modalVisible}

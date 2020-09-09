@@ -35,6 +35,11 @@ export const getMenuTree = ()=>{
   });
 }
 
+export const getAllTree = ()=>{
+  return request(`/api/menu/trees`, {
+    method:'get',
+  });
+}
 
 
 

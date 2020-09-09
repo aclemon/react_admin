@@ -4,6 +4,7 @@ export async function accountLogin(params) {
   return request('/api/auth/login', {
     method: 'POST',
     data: params,
+    requestType: 'form'
   });
 }
 //

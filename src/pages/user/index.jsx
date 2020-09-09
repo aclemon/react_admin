@@ -28,8 +28,10 @@ const TableList = ({ user,role, dispatch }) => {
   const [fileList, setFileList] = useState([]);
   const [columnsStateMap, setColumnsStateMap] = useState(
     {
-      createdAt: { show: false },
-      finishedAt: { show: false },
+      createBy: { show: false,fixed: "right" },
+      createTime: { show: false,fixed: "right" },
+      updateBy: { show: false },
+      updateTime: { show: false },
     });
 
 

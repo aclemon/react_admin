@@ -151,7 +151,6 @@ const CreateForm = (props) => {
               label="合同"
               name="contract"
               valuePropName="fileList"
-
               getValueFromEvent={uploadFile}
             >
               <Upload name="file" action='/api/minio/upload' listType="picture" multiple={false} >

@@ -28,20 +28,20 @@ const RoleModel = {
     },
   },
   // 订阅
-  // subscriptions: {
-  //   setup ({ dispatch, history }) {
-  //     return history.listen(({ pathname }) => {
-  //       if (pathname === '/system/menu') {
-  //         dispatch({
-  //           type: 'getRemote',
-  //           payload: {
-  //             param: {
-  //             },
-  //           },
-  //         });
-  //       }
-  //     });
-  //   },
-  // },
+  subscriptions: {
+    setup ({ dispatch, history }) {
+      return history.listen(({ pathname }) => {
+        if (pathname === '/system/role') {
+          dispatch({
+            type: 'menu/getAllRemote',
+            payload: {
+              param: {
+              },
+            },
+          });
+        }
+      });
+    },
+  },
 }
 export default RoleModel;
