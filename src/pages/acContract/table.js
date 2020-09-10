@@ -7,16 +7,21 @@ export const table = {
       dataIndex: 'contractId',
     },
     {
-      title: '部门Id',
-      dataIndex: 'deptId',
+      title: '部门名称',
+      dataIndex: 'deptName',
     },
     {
-      title: '岗位Id',
-      dataIndex: 'jobId',
+      title: '岗位名称',
+      dataIndex: 'jobName',
     },
+
     {
       title: '合同提供商',
       dataIndex: 'contractProvider',
+    },
+    {
+      title: '外包项目',
+      dataIndex: 'project',
     },
     {
       title: '合同开始日期',

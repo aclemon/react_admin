@@ -17,7 +17,7 @@ import _ from 'lodash';
 const TableList = ({ menu, dispatch }) => {
   console.log(menu,'mmmmmmmmmmmmmmmmmmmmmmm');
   //
-  const allmenus = menu.data ? menu.data : [];
+  const allmenus = menu.allData
 
 // hook========================================================
   const formRef = useRef();

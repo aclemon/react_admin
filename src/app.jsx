@@ -14,7 +14,8 @@ function buildRoutes(authRoutes) {
       return {
         path: item.path,
         name: item.name,
-        // 精准匹配
+        icon: item.icon,
+        // 精准匹配默认false
         exact:  false,
         routes: buildRoutes(item.children),
       };
@@ -23,6 +24,7 @@ function buildRoutes(authRoutes) {
     return {
       path: item.path||'',
       name: item.name||'',
+      // 精准匹配
       exact:  true,
       component:item.component? require(`@/pages${item.component || item.url}`).default:'',
     }

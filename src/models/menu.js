@@ -16,7 +16,7 @@ const MenuModel = {
     *getRemote ({ payload: { param, sorter = {}, filter = {} } }, { put, call }) {
       console.log(param, sorter, filter, 'payload param');
       const {data:res} = yield call(api.getMenuTree);
-      console.log(res,'res');
+      console.log(res,'respermission');
       if (!_.isEmpty(res) ) {
         yield put({
           type: 'getList',
@@ -47,20 +47,20 @@ const MenuModel = {
     },
   },
   // 订阅
-  // subscriptions: {
-  //   setup ({ dispatch, history }) {
-  //     return history.listen(({ pathname }) => {
-  //       if (pathname === '/system/menu') {
-  //         dispatch({
-  //           type: 'getRemote',
-  //           payload: {
-  //             param: {
-  //             },
-  //           },
-  //         });
-  //       }
-  //     });
-  //   },
-  // },
+  subscriptions: {
+    setup ({ dispatch, history }) {
+      return history.listen(({ pathname }) => {
+        if (pathname === '/system/menu') {
+          dispatch({
+            type: 'getAllRemote',
+            payload: {
+              param: {
+              },
+            },
+          });
+        }
+      });
+    },
+  },
 }
 export default MenuModel;

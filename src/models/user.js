@@ -5,6 +5,7 @@ const UserModel = {
   state: {
     currentUser: {},
     data: [],
+    permission:[],
     meta: {
       total: 100,
       pageSize: 5,
@@ -45,10 +46,11 @@ const UserModel = {
   reducers: {
     getList(state, { payload }) {
       console.log('reduces 同步->', payload);
-      return payload;
+      return { ...state, payload};
     },
     saveCurrentUser(state, action) {
-      return { ...state, currentUser: action.payload || {} };
+      console.log(action,'action');
+      return { ...state, currentUser: action.payload || {}, permission: action.payload.roles||[] };
     },
 
     changeNotifyCount(

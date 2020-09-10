@@ -16,7 +16,7 @@ import {
 
 const TableList = ({ user,role, dispatch }) => {
 
-  console.log(role,'rrrrrrrrrr');
+  console.log(role,user,'rrrrrrrrrr');
 // hook========================================================
   const formRef = useRef();
   const actionRef = useRef();
@@ -113,7 +113,7 @@ const TableList = ({ user,role, dispatch }) => {
       fixed: 'right',
       render: (text, record) => (
         <>
-          <Popconfirm
+          {user.permission.indexOf('user:delete')>-1 && <Popconfirm
             title="你确定要删除这条记录吗？"
             onConfirm={async () => {
               await handleRemove(record);
@@ -124,10 +124,9 @@ const TableList = ({ user,role, dispatch }) => {
             cancelText="取消"
           >
             <a>删除</a>
-          </Popconfirm>
-
+          </Popconfirm>}
           <Divider type="vertical"/>
-          <a
+          {user.permission.indexOf('user:update')>-1 &&<a
             onClick={() => {
               handleModalVisible(true);
               record.time = [];
@@ -137,7 +136,7 @@ const TableList = ({ user,role, dispatch }) => {
             }}
           >
             修改
-          </a>
+          </a>}
         </>
       ),
     };
@@ -156,8 +155,6 @@ const TableList = ({ user,role, dispatch }) => {
         actionRef={actionRef}
         //  自定义 table 的 alert设置或者返回false 即可关闭
         // tableAlertRender={false}
-
-
         rowSelection={{
 
           // type:'radio',
@@ -173,7 +170,8 @@ const TableList = ({ user,role, dispatch }) => {
         }}
         // 菜单栏
         toolBarRender={(action, { selectedRows }) => [
-          <Button type="primary" onClick={() => {
+
+          user.permission.indexOf('user:add')>-1 &&<Button type="primary" onClick={() => {
             setCreateForm({});
             handleModalVisible(true);
           }}>
@@ -182,7 +180,7 @@ const TableList = ({ user,role, dispatch }) => {
           <Button type="primary" onClick={() => handleExport(true)}>
             <DownloadOutlined/> 导出
           </Button>,
-          selectedRows && selectedRows.length > 0 && (
+          selectedRows && selectedRows.length > 0 && user.permission.indexOf('user:delete')>-1 && (
             <Popconfirm
               title="你确定要删除这些记录吗？"
               onConfirm={async () => {
@@ -212,7 +210,7 @@ const TableList = ({ user,role, dispatch }) => {
 
 // 1.将仓库的 CrudModal 传递
 const mapStateToProps = ({ user,role ,loading }) => {
-  console.log(role,'rolerole');
+  console.log(loading,'rolerole');
   return {
     user,role
   };

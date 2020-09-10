@@ -10,13 +10,9 @@ import { table } from './table';
 
 
 export const menuList = [
-  { id: 0, value: '一级菜单' },
-  { id: 1, value: '子菜单' },
-  { id: 2, value: '权限按钮' },
+  { id: 1, value: '菜单' },
+  { id: 2, value: '按钮' },
 ]
-
-
-
 
 
 // 新建菜单->选择父级菜单时的数据->格式化
@@ -27,14 +23,14 @@ export const formatData = data => {
       return item.children
         ? {
           title: item.title,
-          value: item.treeId,
-          // key: item.key,
+          // value: item.treeId,
+          key: item.key,
           children: formatData(item.children),
         }
         : {
           title: item.title,
-          value: item.treeId,
-          // key: item.key,
+          // value: item.treeId,
+          key: item.key,
         };
     });
   }
@@ -63,8 +59,8 @@ export const formatPageData = data => {
 
 const filterData = array => {
   return array.filter(item => {
-    //  0代表menu
-    return item.type === 0 ;
+    //  1代表menu
+    return item.type === 1 ;
   });
 };
 

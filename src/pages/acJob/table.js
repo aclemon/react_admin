@@ -1,3 +1,4 @@
+import{renderSwitch} from '@/utils/mixin';
 
 export const table = {
   title:'岗位管理表',
@@ -9,6 +10,7 @@ export const table = {
     {
       title: '状态',
       dataIndex: 'enabled',
+      render: renderSwitch
     },
 
     // ===============================================

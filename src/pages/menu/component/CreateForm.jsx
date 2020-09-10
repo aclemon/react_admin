@@ -41,12 +41,15 @@ const CreateForm = (props) => {
     }
   }, [modalVisible]);
 
-  const treeData = allmenus.length === 0 ? [] : formatData(allmenus);
+  const treeData = formatData(allmenus);
+  console.log(treeData,allmenus,'treeData');
   treeData.unshift({
     title: '无',
-    value: -1,
-    // key: -1,
+    // value: -1,
+    key: -1,
   });
+
+
 
   return (
     <Modal
@@ -90,9 +93,9 @@ const CreateForm = (props) => {
 
 
         <Form.Item label="菜单类型" name="type" rules={[{ required: true, message: '选择菜单类型!' }]}>
-          <Select>
+          <Select >
             {menuList.map((item, index) => (
-              <Select.Option key={index} value={item.id}>
+              <Select.Option key={index} value={item.id} >
                 {item.value}
               </Select.Option>
             ))}

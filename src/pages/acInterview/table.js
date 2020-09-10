@@ -13,7 +13,7 @@ export const table = {
     },
     {
       title: '访谈人员',
-      dataIndex: 'Interviewer',
+      dataIndex: 'interviewer',
     },
     {
       title: '项目',
@@ -21,11 +21,11 @@ export const table = {
     },
     {
       title: '部门Id',
-      dataIndex: 'deptId',
+      dataIndex: 'deptName',
     },
     {
       title: '岗位ID',
-      dataIndex: 'jobId',
+      dataIndex: 'jobName',
     },
     // ===============================================
     {

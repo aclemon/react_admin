@@ -9,7 +9,7 @@ export default defineConfig({
   hash: true,
   antd: {},
   dva: {
-    // 是否启用 dva model 的热更新。
+    // dva model 的热更新。
     hmr: true,
   },
   locale: {

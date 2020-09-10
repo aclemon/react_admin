@@ -2,14 +2,14 @@
 export const table = {
   title:'营运外包检查情况表',
   column:[
-    {
-      title: '分行名称',
-      dataIndex: 'name',
 
-    },
     {
       title: '工作部门',
-      dataIndex: 'level',
+      dataIndex: 'deptName',
+    },
+    {
+      title: '工作岗位',
+      dataIndex: 'jobName',
     },
     {
       title: '外包项目',
