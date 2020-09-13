@@ -25,9 +25,11 @@ Scripts provided in `package.json`. It's safe to modify or add additional script
 ### Start project
 
 ```bash
-npm start
+npm start:dev
 账号：admin
 密码：123456
+
+动态菜单登录成功之后需要再次=====刷新页面====项目结构导致
 ```
 
 ### Build project

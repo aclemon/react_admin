@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Card, Typography, Alert, Button, message, Popconfirm, Divider } from 'antd';
+import { Card, Typography, Alert, Button, message, Popconfirm, Divider,Row, Col ,Tree,Input} from 'antd';
 import { connect } from 'umi';
 import ProTable from '@ant-design/pro-table';
 import { table } from './table';
@@ -8,14 +8,13 @@ import CreateForm from './component/CreateForm';
 import * as api from '@/services/acUser.js';
 import moment from "moment";
 import _ from 'lodash';
-
-
 import {
   PlusOutlined,
   DownloadOutlined,
 } from '@ant-design/icons';
 
-const TableList = ({ user, dispatch }) => {
+const { Search } = Input;
+const TableList = ({ acUser,acDept, dispatch }) => {
 // hook========================================================
   const formRef = useRef();
   const actionRef = useRef();
@@ -162,58 +161,110 @@ const TableList = ({ user, dispatch }) => {
         </>
       ),
     };
+
+  const   treeOnChange = e => {
+
+    const { value } = e.target;
+    console.log(value,e,'treeOnChange');
+    // const expandedKeys = dataList
+    // .map(item => {
+    //   if (item.title.indexOf(value) > -1) {
+    //     return getParentKey(item.key, gData);
+    //   }
+    //   return null;
+    // })
+    // .filter((item, i, self) => item && self.indexOf(item) === i);
+    // this.setState({
+    //   expandedKeys,
+    //   searchValue: value,
+    //   autoExpandParent: true,
+    // });
+  };
+
+
+  const onExpand = expandedKeys => {
+    this.setState({
+      expandedKeys,
+      autoExpandParent: false,
+    });
+  };
+  const onCheck = (checkedKeys, info) => {
+    console.log('onCheck', checkedKeys, info);
+  };
+
+  const onSelect = (selectedKeys, info) => {
+    console.log('selected', selectedKeys, info);
+  };
   return (
-    <div>
-      <ProTable
-        headerTitle={table.title}
-        columns={[...table.column, Option]}
-        columnsStateMap={columnsStateMap}
-        onColumnsStateChange={(map) => setColumnsStateMap(map)}
-        formRef={formRef}
-        scroll={{ x: 'calc(700px + 50%)', y: 400 }}
-        //  如果 dataSource[i].key 没有提供需要提供此选项
-        // rowKey="key"
-        // 进行表格操作
-        actionRef={actionRef}
-        //  自定义 table 的 alert设置或者返回false 即可关闭
-        // tableAlertRender={false}
-        // 开启多选功能
-        rowSelection={{
-        }}
-        // 请求数据
-        request={(params, sort, filter) => {
-          const data = handleQuery(params, sort, filter);
-          return data;
-        }}
-        // 菜单栏
-        toolBarRender={(action, { selectedRows }) => [
-          <Button type="primary" onClick={() => {
-            setCreateForm({});
-            handleModalVisible(true);
-          }}>
-            <PlusOutlined/> 新建
-          </Button>,
-          <Button type="primary" onClick={() => handleExport(true)}>
-            <DownloadOutlined/> 导出
-          </Button>,
+    <>
+      <Row>
+        <Col span={6} >
+          <Search style={{ marginBottom: 8 }} placeholder="Search" onChange={treeOnChange} />
+          {/*<Tree*/}
+          {/*  onExpand={onExpand}*/}
+          {/*  // expandedKeys={expandedKeys}*/}
+          {/*  // autoExpandParent={autoExpandParent}*/}
+          {/*  // treeData={loop(gData)}*/}
+          {/*/>*/}
+          <Tree
+            onSelect={onSelect}
+            onCheck={onCheck}
+            treeData={acDept.data}
+          />
+        </Col>
+        <Col span={18} >
+          <ProTable
+            headerTitle={table.title}
+            columns={[...table.column, Option]}
+            columnsStateMap={columnsStateMap}
+            onColumnsStateChange={(map) => setColumnsStateMap(map)}
+            formRef={formRef}
+            scroll={{ x: 'calc(700px + 50%)', y: 400 }}
+            //  如果 dataSource[i].key 没有提供需要提供此选项
+            // rowKey="key"
+            // 进行表格操作
+            actionRef={actionRef}
+            //  自定义 table 的 alert设置或者返回false 即可关闭
+            // tableAlertRender={false}
+            // 开启多选功能
+            rowSelection={{
+            }}
+            // 请求数据
+            request={(params, sort, filter) => {
+              const data = handleQuery(params, sort, filter);
+              return data;
+            }}
+            // 菜单栏
+            toolBarRender={(action, { selectedRows }) => [
+              <Button type="primary" onClick={() => {
+                setCreateForm({});
+                handleModalVisible(true);
+              }}>
+                <PlusOutlined/> 新建
+              </Button>,
+              <Button type="primary" onClick={() => handleExport(true)}>
+                <DownloadOutlined/> 导出
+              </Button>,
 
-          selectedRows && selectedRows.length > 0 && (
-            <Popconfirm
-              title="你确定要删除这些记录吗？"
-              onConfirm={async () => {
-                await handleRemove(selectedRows);
-                action.reload(true);
-                action.resetPageIndex();
-              }}
+              selectedRows && selectedRows.length > 0 && (
+                <Popconfirm
+                  title="你确定要删除这些记录吗？"
+                  onConfirm={async () => {
+                    await handleRemove(selectedRows);
+                    action.reload(true);
+                    action.resetPageIndex();
+                  }}
 
-              okText="确定"
-              cancelText="取消"
-            >
-              <Button key="remove">批量删除</Button>
-            </Popconfirm>
-          ),
-        ]}
-      />
+                  okText="确定"
+                  cancelText="取消"
+                >
+                  <Button key="remove">批量删除</Button>
+                </Popconfirm>
+                  ),
+            ]}
+          />
+        </Col>
+      </Row>
       <CreateForm
         formRef={createFormRef}
         formRecord={createForm}
@@ -221,14 +272,13 @@ const TableList = ({ user, dispatch }) => {
         onCancel={onCancel}
         onFinish={onFinish}
       />
-    </div>);
+    </>);
 };
 
 // 1.将仓库的 CrudModal 传递
-const mapStateToProps = ({ acUser, loading }) => {
-  console.log(acUser,'mapStateToProps');
+const mapStateToProps = ({ acUser,acDept, loading }) => {
   return {
-    acUser,
+    acUser,acDept
   };
 };
 

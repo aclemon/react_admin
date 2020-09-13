@@ -1,9 +1,10 @@
-import * as api from '@/services/user.js';
+import * as api from '@/services/acUser.js';
 import { removeEmptyParam } from '@/utils/formater';
-import { message } from 'antd';
+import { message,Image  } from 'antd';
 import React from 'react';
 import XLSX from 'xlsx';
 import { table } from './table';
+import _ from 'lodash'
 
 // method======================================================
 /**
@@ -15,13 +16,34 @@ import { table } from './table';
  *
  */
 
+export const genderList = [
+  { id: 1, value: '男' },
+  { id: 2, value: '女' },
+  { id: 3, value: 'o_o ....' },
+]
 
-export const labelList = [
+export const trainingList = [
   { id: 0, value: '关闭' },
   { id: 1, value: '进行中' },
   { id: 2, value: '完成' },
   { id: 3, value: '异常' },
 ];
+
+export function renderImg(value, row, index) {
+  const data = value;
+  return  (data?<Image  width={50} height={50} src={data} />:'--');
+}
+
+export function getGenderLabel(value, row, index) {
+  if (_.isNull(value)) return '--'
+  const res =   genderList.find((item)=>{return  item.id === value});
+  return  res.value;
+}
+export function getTrainingLabel(value, row, index) {
+  if (_.isNull(value)) return '--'
+  const res =   trainingList.find((item)=>{return  item.id === value});
+  return  res.value;
+}
 
 
 
@@ -32,6 +54,8 @@ export const handleQuery = async (params, sorter = {}, filter = {}) => {
     removeEmptyParam(params);
     // todo 后端添加sorter 和filter
     const {data:result} = await api.list({ ...params});
+
+    console.log(result,'result');
     resp.data = result.records;
     // 没key报错
     resp.data.forEach((item) => {
@@ -82,22 +106,19 @@ export const handleRemove = async (selectedRows) => {
  * @returns {Promise<void>}
  */
 export const handleExport = async (exportFlag) => {
-  const data = await handleQuery({
+  const resp = await handleQuery({
     current: 1,
+    // 导出或者导出模板
     pageSize: exportFlag ? 1000 : 1,
     _timestamp: new Date().getTime(),
   });
-  exportExcel(table.column, data.data, exportFlag);
+  exportExcel(table.column, resp.data, exportFlag);
 };
-
-
-
-
 
 
 export function exportExcel (headers, data, exportFlag) {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const fileName = exportFlag ? 'crud.xlsx' : 'template.xlsx';
+  const fileName = exportFlag ? '外包人员信息表.xlsx' : 'template.xlsx';
   const cHeaders = headers
     .map((item, i) => ({
       key: item.key,
@@ -125,11 +146,12 @@ export function exportExcel (headers, data, exportFlag) {
     .reduce((prev, next) => {
       const param = {};
       if (exportFlag) {
+      // else if (next.dataIndex === 'status') {
+      //     param[next.position] = { v: trainingList[next.content].value };
+      //     console.log(param, 'param');
+      //   }
         if (next.dataIndex === 'progress') {
           param[next.position] = { v: `${next.content}%` };
-        } else if (next.dataIndex === 'status') {
-          param[next.position] = { v: valueEnum[next.content].text };
-          console.log(param, 'param');
         } else {
           param[next.position] = { v: next.content };
         }

@@ -19,8 +19,10 @@ const LoginMessage = ({ content }) => (
 );
 
 const Login = props => {
+
   const { userLogin = {}, submitting } = props;
   const { status, type: loginType } = userLogin;
+  console.log(props,'userLogin');
   const [autoLogin, setAutoLogin] = useState(true);
   const [type, setType] = useState('account');
 
@@ -105,7 +107,8 @@ const Login = props => {
             忘记密码
           </a>
         </div>
-        <Submit loading={submitting}>登录</Submit>
+
+        <Submit  loading={submitting} >登录</Submit>
         <div className={styles.other}>
           其他登录方式
           <AlipayCircleOutlined className={styles.icon} />

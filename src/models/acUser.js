@@ -28,10 +28,18 @@ const AcDeptModel = {
   subscriptions: {
     setup ({ dispatch, history }) {
       return history.listen(({ pathname }) => {
-        if (pathname === '/mnt/user') {
+        if (pathname === '/mnt/acUser') {
+          console.log('asaaa');
           dispatch({
             type: 'getRemote',
             payload: {
+            },
+          });
+          dispatch({
+            type: 'acDept/getRemote',
+            payload: {
+              param: {
+              },
             },
           });
         }

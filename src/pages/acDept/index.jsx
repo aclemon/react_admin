@@ -15,6 +15,8 @@ import {
 } from '@ant-design/icons';
 
 const TableList = ({ acDept, dispatch }) => {
+
+  console.log(acDept,'acDDDD');
 // hook========================================================
   const formRef = useRef();
   const actionRef = useRef();
@@ -100,17 +102,14 @@ const TableList = ({ acDept, dispatch }) => {
     }
   };
 
-
+  const onCheck = (checkedKeys, info) => {
+    console.log('onCheck', checkedKeys, info);
+  };
 
   const onSelect = (selectedKeys, info) => {
     console.log('selected', selectedKeys, info);
   };
-  const componentDidMount=()=> {
-    console.log('componentDidMount');
-  }
-  const onCheck = (checkedKeys, info) => {
-    console.log('onCheck', checkedKeys, info);
-  };
+
   const Option =
     {
       title: '操作',
@@ -154,7 +153,7 @@ const TableList = ({ acDept, dispatch }) => {
 
       <Row>
         <Col span={6}>
-
+123456
           <Tree
             onSelect={onSelect}
             onCheck={onCheck}

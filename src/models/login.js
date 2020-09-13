@@ -13,21 +13,19 @@ const Model = {
   },
   effects: {
     *login({ payload }, { call, put }) {
-      console.log(payload,"payload");
+      // console.log(payload,"payload");
       let param = {}
       param = payload
       param.password = encrypt(param.password);
       const response = yield call(accountLogin, param);
       const {data,code} = response
-      localStorage.setItem('token',data.token)
-      console.log(data.token,'data.token');
-      setToken(data.token)
-      yield put({
-        type: 'changeLoginStatus',
-        payload: data,
-      }); // Login successfully
-
       if (code=== '000000') {
+        localStorage.setItem('token',data.token)
+        setToken(data.token)
+        yield put({
+          type: 'changeLoginStatus',
+          payload: { data,code },
+        });
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
@@ -46,9 +44,14 @@ const Model = {
             return;
           }
         }
-
         history.replace(redirect || '/');
+      }else {
+        yield put({
+          type: 'changeLoginStatus',
+          payload: {data,code}
+        });
       }
+
     },
 
     logout() {
@@ -67,9 +70,15 @@ const Model = {
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority('admin');
+      if (payload.code === '000000'){
+        setAuthority('admin');
+        return { ...state, status: 'ok', type: 'account' };
+      }else {
+        return {
+          ...state,status: 'error',type: 'account'
+        }
+      }
 
-      return { ...state, status: 'ok', type: 'account' };
     },
   },
 };

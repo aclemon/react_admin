@@ -5,8 +5,9 @@ import ProTable from '@ant-design/pro-table';
 import { table } from './table';
 import { handleQuery, handleRemove, handleExport } from './minxin';
 import CreateForm from './component/CreateForm';
-import * as api from '@/services/user.js';
-
+import * as api from '@/services/acUser.js';
+import moment from "moment";
+import _ from 'lodash';
 
 
 import {
@@ -26,18 +27,20 @@ const TableList = ({ user, dispatch }) => {
   const [fileList, setFileList] = useState([]);
   const [columnsStateMap, setColumnsStateMap] = useState(
     {
-      createdAt: { show: false },
-      finishedAt: { show: false },
+      createBy: { show: false,fixed: "right" },
+      createTime: { show: false,fixed: "right" },
+      updateBy: { show: false },
+      updateTime: { show: false },
     });
-
-
+  // 关闭Modal
   const onCancel = () => {
     handleModalVisible(false);
     setCreateForm({});
   };
   // key
   const onFinish = async (values) => {
-
+    console.log(values,'values');
+    // values.birthday = moment(values.birthday).format('YYYY-MM-DD')
     const { key } = createForm;
     let res;
     if (key) {
@@ -46,8 +49,11 @@ const TableList = ({ user, dispatch }) => {
       param.key = key;
       res = await handleUpdate(param);
     } else {
+      // 修改需要
+      values.userId = values.id
       res = await handleAdd(values);
     }
+    // 根据是否成功判断是否需要关闭Modal
     res ? onCancel() : '';
   };
 
@@ -59,16 +65,22 @@ const TableList = ({ user, dispatch }) => {
    */
   const handleAdd = async (fields) => {
     const hide = message.loading('正在添加');
+    fields.healthStatus = _.isEmpty(fields.healthStatus)?'':fields.healthStatus[0].response
+    fields.contract = _.isEmpty(fields.contract)?'':fields.contract[0].response
+    fields.confidentialityAgreement = _.isEmpty(fields.confidentialityAgreement)?'':fields.confidentialityAgreement[0].response
+
     try {
       const res = await api.add(fields);
-
       hide();
-      handleModalVisible(false);
-      message.success('添加成功');
-      actionRef.current.reload();
-      return true;
+      if (res.data){
+        message.success('添加成功');
+        handleModalVisible(false);
+        actionRef.current.reload();
+      }else {
+        message.error('添加失败请重试！');
+      }
+      return res.data;
     } catch (error) {
-      hide();
       message.error('添加失败请重试！');
       return false;
     }
@@ -88,8 +100,12 @@ const TableList = ({ user, dispatch }) => {
     try {
       const resp = await api.update(param);
       hide();
-      message.success('更新成功');
-      actionRef.current.reload();
+      if(resp.data){
+        message.success('更新成功');
+        actionRef.current.reload();
+      } else {
+        message.error('后端更新失败失败请重试！');
+      }
       return resp.data;
     } catch (error) {
       hide();
@@ -126,9 +142,18 @@ const TableList = ({ user, dispatch }) => {
           <a
             onClick={() => {
               handleModalVisible(true);
-              record.time = [];
               // record.time[0] = moment(record.startAt);
               // record.time[1] = moment(record.endAt);
+              record.birthday = _.isEmpty(record.birthday)?'':moment(record.birthday)
+              record.exitTime = _.isEmpty(record.exitTime)?'':moment(record.exitTime)
+              record.arrivalTime = _.isEmpty(record.arrivalTime)?'':moment(record.arrivalTime)
+              record.contract =_.isEmpty(record.contract)?'':[{url:record.contract,uid:-1,status:'done',name:'1.png'}]
+              record.confidentialityAgreement =_.isEmpty(record.confidentialityAgreement)?'':[{url:record.confidentialityAgreement,uid:-2,status:'done',name:'2.png'}]
+              record.healthStatus =_.isEmpty(record.healthStatus)?'':[{url:record.healthStatus,uid:-3,status:'done',name:'3.png'}]
+              // record.contract = fileList
+              // record.healthStatus =_.isEmpty(record.healthStatus)?'':[{url:record.healthStatus,uid:-7,status:'done',name:'12.png'}]
+              record.deptId = 'sss'
+              console.log(record,'record');
               setCreateForm(record);
             }}
           >
@@ -138,7 +163,13 @@ const TableList = ({ user, dispatch }) => {
       ),
     };
   return (
-    <div>
+    <>
+
+      <Row>
+        <Col span={18} push={6}>
+
+        </Col>
+<col>
       <ProTable
         headerTitle={table.title}
         columns={[...table.column, Option]}
@@ -152,17 +183,10 @@ const TableList = ({ user, dispatch }) => {
         actionRef={actionRef}
         //  自定义 table 的 alert设置或者返回false 即可关闭
         // tableAlertRender={false}
-
-
+        // 开启多选功能
         rowSelection={{
-
-          // type:'radio',
-          // 选择下拉框
-          // selections:[
-          //
-          // ]
-        }
-        }
+        }}
+        // 请求数据
         request={(params, sort, filter) => {
           const data = handleQuery(params, sort, filter);
           return data;
@@ -178,6 +202,7 @@ const TableList = ({ user, dispatch }) => {
           <Button type="primary" onClick={() => handleExport(true)}>
             <DownloadOutlined/> 导出
           </Button>,
+
           selectedRows && selectedRows.length > 0 && (
             <Popconfirm
               title="你确定要删除这些记录吗？"
@@ -195,6 +220,8 @@ const TableList = ({ user, dispatch }) => {
           ),
         ]}
       />
+</col>
+      </Row>
       <CreateForm
         formRef={createFormRef}
         formRecord={createForm}
@@ -202,13 +229,14 @@ const TableList = ({ user, dispatch }) => {
         onCancel={onCancel}
         onFinish={onFinish}
       />
-    </div>);
+    </>);
 };
 
 // 1.将仓库的 CrudModal 传递
-const mapStateToProps = ({ user, loading }) => {
+const mapStateToProps = ({ acUser, loading }) => {
+  console.log(acUser,'mapStateToProps');
   return {
-    user,
+    acUser,
   };
 };
 

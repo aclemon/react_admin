@@ -16,6 +16,7 @@ export default {
   'menu.system.role': '角色管理',
   'menu.system.menu': '菜单管理',
   'menu.system.test': '测试管理',
+  'menu.system.dept': '部门管理',
   'menu.login': '登录',
   'menu.register': '注册',
   'menu.register.result': '注册结果',
