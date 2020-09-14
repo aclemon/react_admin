@@ -45,3 +45,10 @@ export const importBatch = (data)=>{
     data
   });
 }
+
+export const approve = (data)=>{
+  return request('/api/acContract/approve', {
+    method: 'post',
+    data
+  });
+}

@@ -16,6 +16,10 @@ export const table = {
     },
 
     {
+      title: '审批状态',
+      dataIndex: 'status',
+    },
+    {
       title: '合同提供商',
       dataIndex: 'contractProvider',
     },

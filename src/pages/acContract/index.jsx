@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Card, Typography, Alert, Button, message, Popconfirm, Divider,Upload } from 'antd';
+import { Card, Typography, Alert, Button, message, Popconfirm, Divider,Upload,Dropdown,Menu } from 'antd';
 import { connect } from 'umi';
 import ProTable from '@ant-design/pro-table';
 import { table } from './table';
@@ -10,7 +10,8 @@ import {importExcel} from '@/mixin'
 import {
   PlusOutlined,
   DownloadOutlined,
-  UploadOutlined
+  UploadOutlined,
+  DownOutlined
 } from '@ant-design/icons';
 
 const TableList = ({ user, dispatch }) => {
@@ -152,6 +153,40 @@ const TableList = ({ user, dispatch }) => {
     fileList,
   };
 
+  const menu = (text, record)=>(
+    <Menu>
+      <Menu.Item>
+        <a
+          onClick={
+            async ()=>{
+              const param = {}
+              param.id = record.contractId
+              param.status = 1
+              const resp =   await api.update(param)
+              if (resp.code =='000000'){
+                actionRef.current.reload()
+              }
+            }}>
+          通过{text}---- {record.contractId}
+        </a>
+      </Menu.Item>
+      <Menu.Item>
+        <a onClick={
+          async ()=>{
+           const param = {}
+           param.id = record.contractId
+           param.status = 2
+           const resp =   await api.update(param)
+            if (resp.code =='000000'){
+              actionRef.current.reload()
+            }
+          }}>
+          回退
+        </a>
+      </Menu.Item>
+
+    </Menu>
+  );
 
   const Option =
     {
@@ -182,6 +217,7 @@ const TableList = ({ user, dispatch }) => {
 
           {
             user.permission.indexOf('acContract:update')>-1&&
+              <>
             <a
               onClick={() => {
                 handleModalVisible(true);
@@ -190,10 +226,21 @@ const TableList = ({ user, dispatch }) => {
                 // record.time[1] = moment(record.endAt);
                 setCreateForm(record);
               }}
-            >
+                >
               修改
             </a>
+             <Divider type="horizontal"/>
+             </>
           }
+          {user.permission.indexOf('acContract:approve')>-1&&
+          <Dropdown overlay={menu(text, record)} >
+           <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+             审批<DownOutlined />
+            </a>
+          </Dropdown>
+
+          }
+
 
         </>
       ),
