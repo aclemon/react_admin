@@ -40,7 +40,12 @@ export const getAllTree = ()=>{
     method:'get',
   });
 }
-
+export const importMenu = (data)=>{
+  return request('/api/menu/saveBatch', {
+    method: 'post',
+    data
+  });
+}
 
 
 export const add = (data)=>{

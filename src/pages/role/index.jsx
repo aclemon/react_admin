@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Card, Typography, Alert, Button, message, Popconfirm, Divider } from 'antd';
+import { Card, Typography, Alert, Button, message, Popconfirm, Divider, Upload } from 'antd';
 import { connect } from 'umi';
 import ProTable from '@ant-design/pro-table';
 import { table } from './table';
@@ -11,9 +11,10 @@ import * as api from '@/services/role.js';
 
 import {
   PlusOutlined,
-  DownloadOutlined,
+  DownloadOutlined, UploadOutlined,
 } from '@ant-design/icons';
 import _ from 'lodash';
+import { importExcel } from '@/pages/acUser/minxin';
 
 const TableList = (props) => {
 
@@ -24,6 +25,7 @@ const TableList = (props) => {
   const actionRef = useRef();
   // ModelForm
   const createFormRef = useRef();
+  const [uploading, setUploading] = useState(false);
   const [createForm, setCreateForm] = useState({});
   const [modalVisible, handleModalVisible] = useState(false);
   // 文件上传文件列表
@@ -107,7 +109,34 @@ const TableList = (props) => {
     }
   };
 
+  const handleUploading = async () => {
+    setUploading(true)
+    const hide = message.loading('正在导入');
+    const data = await importExcel(fileList)
 
+    data.forEach((item)=>{
+      item.birthday = new Date(item.birthday)
+    })
+    try {
+
+      await api.importAcUser(data);
+      hide();
+      message.success('导入成功');
+      setFileList(preFile => {
+        const index = fileList.indexOf(fileList[0]);
+        const newFileList = fileList.slice();
+        newFileList.splice(index, 1);
+        return newFileList
+      })
+      actionRef.current.reload();
+      setUploading(false)
+      return true;
+    } catch (error) {
+      hide();
+      message.error(error);
+      return false;
+    }
+  }
   const Option =
     {
       title: '操作',
@@ -146,6 +175,30 @@ const TableList = (props) => {
         </>
       ),
     };
+
+  const uploadProps = {
+    onRemove: file => {
+      setFileList(deletedFile => {
+        const index = fileList.indexOf(deletedFile);
+        const newFileList = fileList.slice();
+        newFileList.splice(index, 1);
+        return newFileList;
+      });
+    },
+    beforeUpload: file => {
+      fileList.length === 0 ?
+        setFileList((preFile) => {
+          preFile.push(file)
+          return preFile
+        }) : message.error("仅支持单文件上传")
+      // 刷新
+      actionRef.current.reload();
+      // console.log(fileList, 'beforeUpload')
+      return false;
+    },
+    multiple: false,
+    fileList,
+  };
   return (
     <div>
       <ProTable
@@ -186,6 +239,22 @@ const TableList = (props) => {
           </Button>,
           <Button type="primary" onClick={() => handleExport(true)}>
             <DownloadOutlined/> 导出
+          </Button>,
+          <Button type="primary" onClick={() => handleExport(false)}>
+            <DownloadOutlined/> 导入模板
+          </Button>,
+          <Upload {...uploadProps}>
+            <Button type="primary">
+              <UploadOutlined/> 导入文件
+            </Button>
+          </Upload>,
+          fileList.length > 0 && <Button
+            type="primary"
+            onClick={handleUploading}
+            disabled={fileList.length === 0}
+            loading={uploading}
+          >
+            {uploading ? '导入中' : '开始导入'}
           </Button>,
           selectedRows && selectedRows.length > 0 && (
             <Popconfirm

@@ -40,3 +40,10 @@ export const add = (data)=>{
 }
 
 
+
+export const importAcCheck = (data)=>{
+  return request('/api/acCheck/saveBatch', {
+    method: 'post',
+    data
+  });
+}

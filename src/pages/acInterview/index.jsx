@@ -6,6 +6,7 @@ import { table } from './table';
 import { handleQuery, handleRemove, handleExport } from './minxin';
 import CreateForm from './component/CreateForm';
 import * as api from '@/services/acInterview.js';
+import {importExcel} from '@/mixin';
 import {
   PlusOutlined,
   DownloadOutlined,
@@ -18,6 +19,7 @@ const TableList = ({ user, dispatch }) => {
   // ModelForm
   const createFormRef = useRef();
   const [createForm, setCreateForm] = useState({});
+  const [uploading, setUploading] = useState(false);
   const [modalVisible, handleModalVisible] = useState(false);
   // 文件上传文件列表
   const [fileList, setFileList] = useState([]);
@@ -29,7 +31,31 @@ const TableList = ({ user, dispatch }) => {
       updateTime: { show: false },
     });
 
+  const handleUploading = async () => {
+    setUploading(true)
+    const hide = message.loading('正在导入');
+    const data = await importExcel(fileList)
 
+    try {
+
+      await api.importAcInterView(data);
+      hide();
+      message.success('导入成功');
+      setFileList(preFile => {
+        const index = fileList.indexOf(fileList[0]);
+        const newFileList = fileList.slice();
+        newFileList.splice(index, 1);
+        return newFileList
+      })
+      actionRef.current.reload();
+      setUploading(false)
+      return true;
+    } catch (error) {
+      hide();
+      message.error(error);
+      return false;
+    }
+  }
   const onCancel = () => {
     handleModalVisible(false);
     setCreateForm({});

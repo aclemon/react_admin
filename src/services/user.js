@@ -46,7 +46,12 @@ export const update = (params)=>{
   });
 }
 
-
+export const importUser = (data)=>{
+  return request('/api/user/saveBatch', {
+    method: 'post',
+    data
+  });
+}
 
 
 export const add = (data)=>{

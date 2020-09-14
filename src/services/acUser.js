@@ -1,5 +1,7 @@
 import request from '@/utils/request';
 
+
+
 export const list = (params)=>{
   return request('/api/acUser/acUsers', {
     params,
@@ -40,6 +42,13 @@ export const upload = (params)=>{
 
 export const add = (data)=>{
   return request('/api/acUser', {
+    method: 'post',
+    data
+  });
+}
+
+export const importAcUser = (data)=>{
+  return request('/api/acUser/saveBatch', {
     method: 'post',
     data
   });

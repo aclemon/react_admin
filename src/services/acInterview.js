@@ -38,3 +38,10 @@ export const add = (data)=>{
     data
   });
 }
+
+export const importAcInterView = (data)=>{
+  return request('/api/acInterView/saveBatch', {
+    method: 'post',
+    data
+  });
+}

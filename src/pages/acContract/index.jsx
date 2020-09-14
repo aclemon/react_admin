@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Card, Typography, Alert, Button, message, Popconfirm, Divider } from 'antd';
+import { Card, Typography, Alert, Button, message, Popconfirm, Divider,Upload } from 'antd';
 import { connect } from 'umi';
 import ProTable from '@ant-design/pro-table';
 import { table } from './table';
@@ -12,6 +12,7 @@ import * as api from '@/services/acContract.js';
 import {
   PlusOutlined,
   DownloadOutlined,
+  UploadOutlined
 } from '@ant-design/icons';
 
 const TableList = ({ user, dispatch }) => {
@@ -20,6 +21,7 @@ const TableList = ({ user, dispatch }) => {
   const actionRef = useRef();
   // ModelForm
   const createFormRef = useRef();
+
   const [createForm, setCreateForm] = useState({});
   const [modalVisible, handleModalVisible] = useState(false);
   // 文件上传文件列表
@@ -53,6 +55,34 @@ const TableList = ({ user, dispatch }) => {
     res ? onCancel() : '';
   };
 
+  const handleUploading = async () => {
+    setUploading(true)
+    const hide = message.loading('正在导入');
+    const data = await importExcel(fileList)
+
+    data.forEach((item)=>{
+      item.birthday = new Date(item.birthday)
+    })
+    try {
+
+      await api.importAcUser(data);
+      hide();
+      message.success('导入成功');
+      setFileList(preFile => {
+        const index = fileList.indexOf(fileList[0]);
+        const newFileList = fileList.slice();
+        newFileList.splice(index, 1);
+        return newFileList
+      })
+      actionRef.current.reload();
+      setUploading(false)
+      return true;
+    } catch (error) {
+      hide();
+      message.error(error);
+      return false;
+    }
+  }
 
   /**
    * 新增
@@ -98,6 +128,30 @@ const TableList = ({ user, dispatch }) => {
       message.error('更新失败请重试！');
       return false;
     }
+  };
+
+  const uploadProps = {
+    onRemove: file => {
+      setFileList(deletedFile => {
+        const index = fileList.indexOf(deletedFile);
+        const newFileList = fileList.slice();
+        newFileList.splice(index, 1);
+        return newFileList;
+      });
+    },
+    beforeUpload: file => {
+      fileList.length === 0 ?
+        setFileList((preFile) => {
+          preFile.push(file)
+          return preFile
+        }) : message.error("仅支持单文件上传")
+      // 刷新
+      actionRef.current.reload();
+      // console.log(fileList, 'beforeUpload')
+      return false;
+    },
+    multiple: false,
+    fileList,
   };
 
 
@@ -180,6 +234,14 @@ const TableList = ({ user, dispatch }) => {
           <Button type="primary" onClick={() => handleExport(true)}>
             <DownloadOutlined/> 导出
           </Button>,
+          <Button type="primary" onClick={() => handleExport(true)}>
+            <DownloadOutlined/> 导入模板
+          </Button>,
+          <Upload {...uploadProps}>
+            <Button type="primary">
+              <UploadOutlined/> 导入文件
+            </Button>
+          </Upload>,
           selectedRows && selectedRows.length > 0 && (
             <Popconfirm
               title="你确定要删除这些记录吗？"

@@ -38,3 +38,10 @@ export const add = (data)=>{
     data
   });
 }
+
+export const importBatch = (data)=>{
+  return request('/api/acContract/saveBatch', {
+    method: 'post',
+    data
+  });
+}

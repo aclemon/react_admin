@@ -62,7 +62,7 @@ const CreateForm = (props) => {
         }}
       >
         <Form.Item
-          label="昵称"
+          label="部门名称"
           name="nickName"
           rules={[{ required: true, message: '输入昵称!' }]}
         >
@@ -70,7 +70,7 @@ const CreateForm = (props) => {
         </Form.Item>
 
         <Form.Item
-          label="账号"
+          label="岗位ID"
           name="username"
           rules={[{ required: true, message: '输入账号!' }]}
         >
@@ -78,24 +78,61 @@ const CreateForm = (props) => {
         </Form.Item>
 
         <Form.Item
-          label="密码"
-          name="password"
+          label="合同提供商"
+          name="contractProvider"
           rules={[{ required: true, message: '输入密码!' }]}
         >
-          <Input type= { 'password'}/>
+          <Input />
         </Form.Item>
 
 
         <Form.Item
-          label="手机号码"
-          name="phone"
+          label="外包项目"
+          name="project"
         >
           <Input/>
         </Form.Item>
 
         <Form.Item
-          label="邮箱"
-          name="email"
+          label="合同开始日期"
+          name="contractStartTime"
+        >
+          <Input/>
+        </Form.Item>
+        <Form.Item
+          label="合同结束日期"
+          name="contractEndTime"
+        >
+          <Input/>
+        </Form.Item>
+        <Form.Item
+          label="自动延期"
+          name="autoDelay"
+        >
+          <Input/>
+        </Form.Item>
+        <Form.Item
+          label="购买保险"
+          name="enabledInsurance"
+        >
+          <Input/>
+        </Form.Item>
+        <Form.Item
+          label="保险结束日期"
+          name="insuranceEndTime"
+        >
+          <Input/>
+        </Form.Item>
+        <Form.Item
+          label="集中采购日期"
+          name="purchaseStartTime"
+        >
+          <Input/>
+        </Form.Item>
+
+        <Form.Item
+          label="集中采购到期日"
+          name="purchaseEndTime"
         >
           <Input/>
         </Form.Item>

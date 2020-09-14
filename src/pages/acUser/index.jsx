@@ -1,16 +1,16 @@
 import React, { useState, useRef } from 'react';
-import { Card, Typography, Alert, Button, message, Popconfirm, Divider,Row, Col ,Tree,Input} from 'antd';
+import { Card, Typography, Alert, Button, message, Popconfirm, Divider, Row, Col, Tree, Input, Upload } from 'antd';
 import { connect } from 'umi';
 import ProTable from '@ant-design/pro-table';
 import { table } from './table';
-import { handleQuery, handleRemove, handleExport } from './minxin';
+import { handleQuery, handleRemove, handleExport,importExcel } from './minxin';
 import CreateForm from './component/CreateForm';
 import * as api from '@/services/acUser.js';
 import moment from "moment";
 import _ from 'lodash';
 import {
   PlusOutlined,
-  DownloadOutlined,
+  DownloadOutlined, UploadOutlined,
 } from '@ant-design/icons';
 
 const { Search } = Input;
@@ -22,6 +22,7 @@ const TableList = ({ acUser,acDept, dispatch }) => {
   const createFormRef = useRef();
   const [createForm, setCreateForm] = useState({});
   const [modalVisible, handleModalVisible] = useState(false);
+  const [uploading, setUploading] = useState(false);
   // 文件上传文件列表
   const [fileList, setFileList] = useState([]);
   const [columnsStateMap, setColumnsStateMap] = useState(
@@ -56,6 +57,34 @@ const TableList = ({ acUser,acDept, dispatch }) => {
     res ? onCancel() : '';
   };
 
+  const handleUploading = async () => {
+    setUploading(true)
+    const hide = message.loading('正在导入');
+    const data = await importExcel(fileList)
+
+    data.forEach((item)=>{
+       item.birthday = new Date(item.birthday)
+    })
+    try {
+
+      await api.importAcUser(data);
+      hide();
+      message.success('导入成功');
+      setFileList(preFile => {
+        const index = fileList.indexOf(fileList[0]);
+        const newFileList = fileList.slice();
+        newFileList.splice(index, 1);
+        return newFileList
+      })
+      actionRef.current.reload();
+      setUploading(false)
+      return true;
+    } catch (error) {
+      hide();
+      message.error(error);
+      return false;
+    }
+  }
 
   /**
    * 新增
@@ -180,6 +209,30 @@ const TableList = ({ acUser,acDept, dispatch }) => {
     //   autoExpandParent: true,
     // });
   };
+  const uploadProps = {
+    onRemove: file => {
+      setFileList(deletedFile => {
+        const index = fileList.indexOf(deletedFile);
+        const newFileList = fileList.slice();
+        newFileList.splice(index, 1);
+        return newFileList;
+      });
+    },
+    beforeUpload: file => {
+      fileList.length === 0 ?
+        setFileList((preFile) => {
+          preFile.push(file)
+          return preFile
+        }) : message.error("仅支持单文件上传")
+      // 刷新
+      actionRef.current.reload();
+      // console.log(fileList, 'beforeUpload')
+      return false;
+    },
+    multiple: false,
+    fileList,
+  };
+
 
 
   const onExpand = expandedKeys => {
@@ -195,6 +248,50 @@ const TableList = ({ acUser,acDept, dispatch }) => {
   const onSelect = (selectedKeys, info) => {
     console.log('selected', selectedKeys, info);
   };
+
+  const toolbar=(action, { selectedRows }) => [
+    <Button type="primary" onClick={() => {
+      setCreateForm({});
+      handleModalVisible(true);
+    }}>
+      <PlusOutlined/> 新建
+    </Button>,
+    <Button type="primary" onClick={() => handleExport(true)}>
+      <DownloadOutlined/> 导出
+    </Button>,
+    <Button type="primary" onClick={() => handleExport(false)}>
+      <DownloadOutlined/> 导入模板
+    </Button>,
+    <Upload {...uploadProps}>
+      <Button type="primary">
+        <UploadOutlined/> 导入文件
+      </Button>
+    </Upload>,
+    fileList.length > 0 && <Button
+      type="primary"
+      onClick={handleUploading}
+      disabled={fileList.length === 0}
+      loading={uploading}
+    >
+      {uploading ? '导入中' : '开始导入'}
+    </Button>,
+
+    selectedRows && selectedRows.length > 0 && (
+      <Popconfirm
+        title="你确定要删除这些记录吗？"
+        onConfirm={async () => {
+          await handleRemove(selectedRows);
+          action.reload(true);
+          action.resetPageIndex();
+        }}
+
+        okText="确定"
+        cancelText="取消"
+      >
+        <Button key="remove">批量删除</Button>
+      </Popconfirm>
+    ),
+  ]
   return (
     <>
       <Row>
@@ -235,33 +332,7 @@ const TableList = ({ acUser,acDept, dispatch }) => {
               return data;
             }}
             // 菜单栏
-            toolBarRender={(action, { selectedRows }) => [
-              <Button type="primary" onClick={() => {
-                setCreateForm({});
-                handleModalVisible(true);
-              }}>
-                <PlusOutlined/> 新建
-              </Button>,
-              <Button type="primary" onClick={() => handleExport(true)}>
-                <DownloadOutlined/> 导出
-              </Button>,
-
-              selectedRows && selectedRows.length > 0 && (
-                <Popconfirm
-                  title="你确定要删除这些记录吗？"
-                  onConfirm={async () => {
-                    await handleRemove(selectedRows);
-                    action.reload(true);
-                    action.resetPageIndex();
-                  }}
-
-                  okText="确定"
-                  cancelText="取消"
-                >
-                  <Button key="remove">批量删除</Button>
-                </Popconfirm>
-                  ),
-            ]}
+            toolBarRender={toolbar}
           />
         </Col>
       </Row>
