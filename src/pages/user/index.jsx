@@ -227,13 +227,13 @@ const TableList = ({ user,role, dispatch }) => {
           }}>
             <PlusOutlined/> 新建
           </Button>,
-          <Button type="primary" onClick={() => handleExport(true)}>
+          user.permission.indexOf('user:export')>-1 && <Button type="primary" onClick={() => handleExport(true)}>
             <DownloadOutlined/> 导出
           </Button>,
-          <Button type="primary" onClick={() => handleExport(false)}>
+          user.permission.indexOf('user:import')>-1 &&<Button type="primary" onClick={() => handleExport(false)}>
             <DownloadOutlined/> 导入模板
           </Button>,
-          <Upload {...uploadProps}>
+          user.permission.indexOf('user:import')>-1 &&<Upload {...uploadProps}>
             <Button type="primary">
               <UploadOutlined/> 导入文件
             </Button>

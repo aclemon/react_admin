@@ -19,6 +19,7 @@ import { importExcel } from '@/pages/acUser/minxin';
 const TableList = (props) => {
 
   const {menu} = props
+  const {user} = props
 // hook========================================================
 
   const formRef = useRef();
@@ -147,31 +148,37 @@ const TableList = (props) => {
       fixed: 'right',
       render: (text, record) => (
         <>
-          <Popconfirm
-            title="你确定要删除这条记录吗？"
-            onConfirm={async () => {
-              await handleRemove(record);
-              actionRef.current.reload();
+          {user.permission.indexOf('role:delete')>-1 &&(<>
 
-            }}
-            okText="确定"
-            cancelText="取消"
-          >
-            <a>删除</a>
-          </Popconfirm>
+            <Popconfirm
+              title="你确定要删除这条记录吗？"
+              onConfirm={async () => {
+                await handleRemove(record);
+                actionRef.current.reload();
 
-          <Divider type="vertical"/>
-          <a
-            onClick={() => {
-              handleModalVisible(true);
-              record.time = [];
-              // record.time[0] = moment(record.startAt);
-              // record.time[1] = moment(record.endAt);
-              setCreateForm(record);
-            }}
-          >
-            修改
-          </a>
+              }}
+              okText="确定"
+              cancelText="取消"
+            >
+              <a>删除</a>
+            </Popconfirm>
+
+            <Divider type="vertical"/>
+          </> )}
+          {
+            user.permission.indexOf('role:update')>-1 &&       <a
+              onClick={() => {
+                handleModalVisible(true);
+                record.time = [];
+                // record.time[0] = moment(record.startAt);
+                // record.time[1] = moment(record.endAt);
+                setCreateForm(record);
+              }}
+            >
+              修改
+            </a>
+          }
+
         </>
       ),
     };
@@ -237,13 +244,13 @@ const TableList = (props) => {
           }}>
             <PlusOutlined/> 新建
           </Button>,
-          <Button type="primary" onClick={() => handleExport(true)}>
+          user.permission.indexOf('role:export')>-1 && <Button type="primary" onClick={() => handleExport(true)}>
             <DownloadOutlined/> 导出
           </Button>,
-          <Button type="primary" onClick={() => handleExport(false)}>
+          user.permission.indexOf('role:import')>-1 && <Button type="primary" onClick={() => handleExport(false)}>
             <DownloadOutlined/> 导入模板
           </Button>,
-          <Upload {...uploadProps}>
+          user.permission.indexOf('role:import')>-1 && <Upload {...uploadProps}>
             <Button type="primary">
               <UploadOutlined/> 导入文件
             </Button>
@@ -285,9 +292,9 @@ const TableList = (props) => {
 };
 
 // 1.将仓库的 CrudModal 传递
-const mapStateToProps = ({ role,menu, loading }) => {
+const mapStateToProps = ({ role,menu,user,loading }) => {
   return {
-    role,menu
+    role,menu,user
   };
 };
 
