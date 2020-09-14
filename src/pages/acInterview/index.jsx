@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Card, Typography, Alert, Button, message, Popconfirm, Divider } from 'antd';
+import { Card, Typography, Alert, Button, message, Popconfirm, Divider, Upload } from 'antd';
 import { connect } from 'umi';
 import ProTable from '@ant-design/pro-table';
 import { table } from './table';
@@ -9,7 +9,7 @@ import * as api from '@/services/acInterview.js';
 import {importExcel} from '@/mixin';
 import {
   PlusOutlined,
-  DownloadOutlined,
+  DownloadOutlined, UploadOutlined,
 } from '@ant-design/icons';
 
 const TableList = ({ user, dispatch }) => {
@@ -134,34 +134,66 @@ const TableList = ({ user, dispatch }) => {
       fixed: 'right',
       render: (text, record) => (
         <>
-          <Popconfirm
-            title="你确定要删除这条记录吗？"
-            onConfirm={async () => {
-              await handleRemove(record);
-              actionRef.current.reload();
+          {
+            user.permission.indexOf('acInterview:delete')>-1&&
+              <>
+                <Popconfirm
+                  title="你确定要删除这条记录吗？"
+                  onConfirm={async () => {
+                    await handleRemove(record);
+                    actionRef.current.reload();
 
-            }}
-            okText="确定"
-            cancelText="取消"
-          >
-            <a>删除</a>
-          </Popconfirm>
+                  }}
+                  okText="确定"
+                  cancelText="取消"
+                >
+                  <a>删除</a>
+                </Popconfirm>
+                <Divider type="vertical"/>
+              </>
+          }
+          {
+            user.permission.indexOf('acInterview:update')>-1&&
+            <a
+              onClick={() => {
+                handleModalVisible(true);
+                record.time = [];
+                // record.time[0] = moment(record.startAt);
+                // record.time[1] = moment(record.endAt);
+                setCreateForm(record);
+              }}
+            >
+              修改
+            </a>
+          }
 
-          <Divider type="vertical"/>
-          <a
-            onClick={() => {
-              handleModalVisible(true);
-              record.time = [];
-              // record.time[0] = moment(record.startAt);
-              // record.time[1] = moment(record.endAt);
-              setCreateForm(record);
-            }}
-          >
-            修改
-          </a>
         </>
       ),
     };
+
+  const uploadProps = {
+    onRemove: file => {
+      setFileList(deletedFile => {
+        const index = fileList.indexOf(deletedFile);
+        const newFileList = fileList.slice();
+        newFileList.splice(index, 1);
+        return newFileList;
+      });
+    },
+    beforeUpload: file => {
+      fileList.length === 0 ?
+        setFileList((preFile) => {
+          preFile.push(file)
+          return preFile
+        }) : message.error("仅支持单文件上传")
+      // 刷新
+      actionRef.current.reload();
+      // console.log(fileList, 'beforeUpload')
+      return false;
+    },
+    multiple: false,
+    fileList,
+  };
   return (
     <div>
       <ProTable
@@ -194,16 +226,24 @@ const TableList = ({ user, dispatch }) => {
         }}
         // 菜单栏
         toolBarRender={(action, { selectedRows }) => [
-          <Button type="primary" onClick={() => {
+          user.permission.indexOf('acInterview:add')>-1 && <Button type="primary" onClick={() => {
             setCreateForm({});
             handleModalVisible(true);
           }}>
             <PlusOutlined/> 新建
           </Button>,
-          <Button type="primary" onClick={() => handleExport(true)}>
+          user.permission.indexOf('acInterview:export')>-1 && <Button type="primary" onClick={() => handleExport(true)}>
             <DownloadOutlined/> 导出
           </Button>,
-          selectedRows && selectedRows.length > 0 && (
+          user.permission.indexOf('acInterview:import')>-1 &&<Button type="primary" onClick={() => handleExport(false)}>
+            <DownloadOutlined/> 导入模板
+          </Button>,
+          user.permission.indexOf('acInterview:import')>-1 &&<Upload {...uploadProps}>
+            <Button type="primary">
+              <UploadOutlined/> 导入文件
+            </Button>
+          </Upload>,
+          user.permission.indexOf('acInterview:delete')>-1 &&  selectedRows && selectedRows.length > 0 && (
             <Popconfirm
               title="你确定要删除这些记录吗？"
               onConfirm={async () => {

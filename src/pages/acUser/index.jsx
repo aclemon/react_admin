@@ -14,7 +14,7 @@ import {
 } from '@ant-design/icons';
 
 const { Search } = Input;
-const TableList = ({ acUser,acDept, dispatch }) => {
+const TableList = ({ acUser,acDept,user, dispatch }) => {
 // hook========================================================
   const formRef = useRef();
   const actionRef = useRef();
@@ -153,6 +153,9 @@ const TableList = ({ acUser,acDept, dispatch }) => {
       fixed: 'right',
       render: (text, record) => (
         <>
+
+          {user.permission.indexOf('acUser:delete')>-1&&
+            <>
           <Popconfirm
             title="你确定要删除这条记录吗？"
             onConfirm={async () => {
@@ -165,9 +168,8 @@ const TableList = ({ acUser,acDept, dispatch }) => {
           >
             <a>删除</a>
           </Popconfirm>
-
-          <Divider type="vertical"/>
-          <a
+          <Divider type="vertical"/></>}
+          {user.permission.indexOf('acUser:update')>-1&&<a
             onClick={() => {
               handleModalVisible(true);
               // record.time[0] = moment(record.startAt);
@@ -187,6 +189,7 @@ const TableList = ({ acUser,acDept, dispatch }) => {
           >
             修改
           </a>
+          }
         </>
       ),
     };
@@ -250,19 +253,19 @@ const TableList = ({ acUser,acDept, dispatch }) => {
   };
 
   const toolbar=(action, { selectedRows }) => [
-    <Button type="primary" onClick={() => {
+    user.permission.indexOf('acUser:add')>-1&&  <Button type="primary" onClick={() => {
       setCreateForm({});
       handleModalVisible(true);
     }}>
       <PlusOutlined/> 新建
     </Button>,
-    <Button type="primary" onClick={() => handleExport(true)}>
+    user.permission.indexOf('acUser:export')>-1&&  <Button type="primary" onClick={() => handleExport(true)}>
       <DownloadOutlined/> 导出
     </Button>,
-    <Button type="primary" onClick={() => handleExport(false)}>
+    user.permission.indexOf('acUser:import')>-1&&  <Button type="primary" onClick={() => handleExport(false)}>
       <DownloadOutlined/> 导入模板
     </Button>,
-    <Upload {...uploadProps}>
+    user.permission.indexOf('acUser:import')>-1&&  <Upload {...uploadProps}>
       <Button type="primary">
         <UploadOutlined/> 导入文件
       </Button>
@@ -347,9 +350,9 @@ const TableList = ({ acUser,acDept, dispatch }) => {
 };
 
 // 1.将仓库的 CrudModal 传递
-const mapStateToProps = ({ acUser,acDept, loading }) => {
+const mapStateToProps = ({ acUser,acDept, user,loading }) => {
   return {
-    acUser,acDept
+    acUser,acDept,user
   };
 };
 

@@ -238,7 +238,7 @@ const TableList = (props) => {
         }}
         // 菜单栏
         toolBarRender={(action, { selectedRows }) => [
-          <Button type="primary" onClick={() => {
+          user.permission.indexOf('role:add')>-1 &&  <Button type="primary" onClick={() => {
             setCreateForm({});
             handleModalVisible(true);
           }}>

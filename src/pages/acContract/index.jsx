@@ -6,9 +6,7 @@ import { table } from './table';
 import { handleQuery, handleRemove, handleExport } from './minxin';
 import CreateForm from './component/CreateForm';
 import * as api from '@/services/acContract.js';
-
-
-
+import {importExcel} from '@/mixin'
 import {
   PlusOutlined,
   DownloadOutlined,
@@ -21,7 +19,7 @@ const TableList = ({ user, dispatch }) => {
   const actionRef = useRef();
   // ModelForm
   const createFormRef = useRef();
-
+  const [uploading, setUploading] = useState(false);
   const [createForm, setCreateForm] = useState({});
   const [modalVisible, handleModalVisible] = useState(false);
   // 文件上传文件列表
@@ -65,7 +63,7 @@ const TableList = ({ user, dispatch }) => {
     })
     try {
 
-      await api.importAcUser(data);
+      await api.importBatch(data);
       hide();
       message.success('导入成功');
       setFileList(preFile => {
@@ -165,6 +163,8 @@ const TableList = ({ user, dispatch }) => {
       fixed: 'right',
       render: (text, record) => (
         <>
+          {user.permission.indexOf('acContract:delete')>-1&&
+            <>
           <Popconfirm
             title="你确定要删除这条记录吗？"
             onConfirm={async () => {
@@ -177,19 +177,24 @@ const TableList = ({ user, dispatch }) => {
           >
             <a>删除</a>
           </Popconfirm>
-
           <Divider type="vertical"/>
-          <a
-            onClick={() => {
-              handleModalVisible(true);
-              record.time = [];
-              // record.time[0] = moment(record.startAt);
-              // record.time[1] = moment(record.endAt);
-              setCreateForm(record);
-            }}
-          >
-            修改
-          </a>
+          </>}
+
+          {
+            user.permission.indexOf('acContract:update')>-1&&
+            <a
+              onClick={() => {
+                handleModalVisible(true);
+                record.time = [];
+                // record.time[0] = moment(record.startAt);
+                // record.time[1] = moment(record.endAt);
+                setCreateForm(record);
+              }}
+            >
+              修改
+            </a>
+          }
+
         </>
       ),
     };
@@ -225,24 +230,24 @@ const TableList = ({ user, dispatch }) => {
         }}
         // 菜单栏
         toolBarRender={(action, { selectedRows }) => [
-          <Button type="primary" onClick={() => {
+          user.permission.indexOf('acContract:add')>-1&&  <Button type="primary" onClick={() => {
             setCreateForm({});
             handleModalVisible(true);
           }}>
             <PlusOutlined/> 新建
           </Button>,
-          <Button type="primary" onClick={() => handleExport(true)}>
+          user.permission.indexOf('acContract:export')>-1&&  <Button type="primary" onClick={() => handleExport(true)}>
             <DownloadOutlined/> 导出
           </Button>,
-          <Button type="primary" onClick={() => handleExport(true)}>
+          user.permission.indexOf('acContract:import')>-1&& <Button type="primary" onClick={() => handleExport(true)}>
             <DownloadOutlined/> 导入模板
           </Button>,
-          <Upload {...uploadProps}>
+          user.permission.indexOf('acContract:import')>-1&& <Upload {...uploadProps}>
             <Button type="primary">
               <UploadOutlined/> 导入文件
             </Button>
           </Upload>,
-          selectedRows && selectedRows.length > 0 && (
+          user.permission.indexOf('acContract:delete')>-1&& selectedRows && selectedRows.length > 0 && (
             <Popconfirm
               title="你确定要删除这些记录吗？"
               onConfirm={async () => {

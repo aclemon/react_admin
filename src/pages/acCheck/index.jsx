@@ -158,31 +158,41 @@ const TableList = ({ user, dispatch }) => {
       fixed: 'right',
       render: (text, record) => (
         <>
-          <Popconfirm
-            title="你确定要删除这条记录吗？"
-            onConfirm={async () => {
-              await handleRemove(record);
-              actionRef.current.reload();
 
-            }}
-            okText="确定"
-            cancelText="取消"
-          >
-            <a>删除</a>
-          </Popconfirm>
+          {
+            user.permission.indexOf('acCheck:delete')>-1&&<>
+              <Popconfirm
+                title="你确定要删除这条记录吗？"
+                onConfirm={async () => {
+                  await handleRemove(record);
+                  actionRef.current.reload();
 
-          <Divider type="vertical"/>
-          <a
-            onClick={() => {
-              handleModalVisible(true);
-              record.time = [];
-              // record.time[0] = moment(record.startAt);
-              // record.time[1] = moment(record.endAt);
-              setCreateForm(record);
-            }}
-          >
-            修改
-          </a>
+                }}
+                okText="确定"
+                cancelText="取消"
+              >
+                <a>删除</a>
+              </Popconfirm>
+
+              <Divider type="vertical"/>
+
+            </>
+          }
+          {
+            user.permission.indexOf('acCheck:update')>-1&&
+            <a
+              onClick={() => {
+                handleModalVisible(true);
+                record.time = [];
+                // record.time[0] = moment(record.startAt);
+                // record.time[1] = moment(record.endAt);
+                setCreateForm(record);
+              }}
+            >
+              修改
+            </a>
+          }
+
         </>
       ),
     };
@@ -218,19 +228,19 @@ const TableList = ({ user, dispatch }) => {
         }}
         // 菜单栏
         toolBarRender={(action, { selectedRows }) => [
-          <Button type="primary" onClick={() => {
+          user.permission.indexOf('acCheck:add')>-1&& <Button type="primary" onClick={() => {
             setCreateForm({});
             handleModalVisible(true);
           }}>
             <PlusOutlined/> 新建
           </Button>,
-          <Button type="primary" onClick={() => handleExport(true)}>
+          user.permission.indexOf('acCheck:export')>-1&&<Button type="primary" onClick={() => handleExport(true)}>
             <DownloadOutlined/> 导出
           </Button>,
-          <Button type="primary" onClick={() => handleExport(false)}>
+          user.permission.indexOf('acCheck:import')>-1&&<Button type="primary" onClick={() => handleExport(false)}>
             <DownloadOutlined/> 导入模板
           </Button>,
-          <Upload {...uploadProps}>
+          user.permission.indexOf('acCheck:import')>-1&& <Upload {...uploadProps}>
             <Button type="primary">
               <UploadOutlined/> 导入文件
             </Button>
@@ -243,7 +253,7 @@ const TableList = ({ user, dispatch }) => {
           >
             {uploading ? '导入中' : '开始导入'}
           </Button>,
-          selectedRows && selectedRows.length > 0 && (
+          user.permission.indexOf('acCheck:delete')>-1 && selectedRows && selectedRows.length > 0 && (
             <Popconfirm
               title="你确定要删除这些记录吗？"
               onConfirm={async () => {

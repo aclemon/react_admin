@@ -15,7 +15,7 @@ import {
 } from '@ant-design/icons';
 import _ from 'lodash';
 
-const TableList = ({ menu, dispatch }) => {
+const TableList = ({ menu,user, dispatch }) => {
   console.log(menu,'mmmmmmmmmmmmmmmmmmmmmmm');
   //
   const allmenus = menu.allData
@@ -189,6 +189,8 @@ const TableList = ({ menu, dispatch }) => {
       fixed: 'right',
       render: (text, record) => (
         <>
+
+          {user.permission.indexOf('menu:delete')>-1 &&<>
           <Popconfirm
             title="你确定要删除这条记录吗？"
             onConfirm={async () => {
@@ -203,6 +205,9 @@ const TableList = ({ menu, dispatch }) => {
           </Popconfirm>
 
           <Divider type="vertical"/>
+          </>}
+          {user.permission.indexOf('menu:update')>-1&&
+
           <a
             onClick={() => {
               handleModalVisible(true);
@@ -214,6 +219,7 @@ const TableList = ({ menu, dispatch }) => {
           >
             修改
           </a>
+          }
         </>
       ),
     };
@@ -327,19 +333,19 @@ const TableList = ({ menu, dispatch }) => {
           }}
           // 菜单栏
           toolBarRender={(action, { selectedRows }) => [
-            <Button type="primary" onClick={() => {
+            user.permission.indexOf('menu:add')>-1&&  <Button type="primary" onClick={() => {
               setCreateForm({});
               handleModalVisible(true);
             }}>
               <PlusOutlined/> 新建
             </Button>,
-            <Button type="primary" onClick={() => handleExport(true)}>
+            user.permission.indexOf('menu:export')>-1&& <Button type="primary" onClick={() => handleExport(true)}>
               <DownloadOutlined/> 导出
             </Button>,
-            <Button type="primary" onClick={() => handleExport(false)}>
+            user.permission.indexOf('menu:import')>-1&& <Button type="primary" onClick={() => handleExport(false)}>
               <DownloadOutlined/> 导入模板
             </Button>,
-            <Upload {...uploadProps}>
+            user.permission.indexOf('menu:import')>-1&& <Upload {...uploadProps}>
               <Button type="primary">
                 <UploadOutlined/> 导入文件
               </Button>
@@ -399,9 +405,9 @@ const TableList = ({ menu, dispatch }) => {
 // 1.将仓库的 CrudModal 传递
 const mapStateToProps = (state) => {
   console.log(state,'state');
-  const  { menu } = state
+  const  { menu,user } = state
   return {
-    menu,
+    menu,user
   };
 };
 
