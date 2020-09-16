@@ -38,16 +38,11 @@ export function patchRoutes({ routes }) {
   console.log(routes,'patchRoutes');
   // 清空左侧路由
   // routes[0].routes[1].routes.splice(0, 100);
-
   const buidRrr = buildRoutes(dynamicRoutes)
-
   console.log(buidRrr,'buidRrr');
-
-
   routes[0].routes[1].routes[0].routes = [...routes[0].routes[1].routes[0].routes,...buidRrr]
 
 
-  // console.log(routes[0].routes[1],'routes[0].routes[0].routes');
 }
 
 

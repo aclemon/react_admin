@@ -20,8 +20,6 @@ const Model = {
       const response = yield call(accountLogin, param);
       const {data,code} = response
       if (code=== '000000') {
-        localStorage.setItem('token',data.token)
-        setToken(data.token)
         yield put({
           type: 'changeLoginStatus',
           payload: { data,code },
@@ -71,6 +69,8 @@ const Model = {
   reducers: {
     changeLoginStatus(state, { payload }) {
       if (payload.code === '000000'){
+        localStorage.setItem('token',payload.data.token)
+        setToken(payload.data.token)
         setAuthority('admin');
         return { ...state, status: 'ok', type: 'account' };
       }else {

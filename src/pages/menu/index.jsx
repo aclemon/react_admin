@@ -198,7 +198,7 @@ const TableList = ({ menu,user, dispatch }) => {
               actionRef.current.reload();
 
             }}
-            okText="确定"
+              okText="确定"
             cancelText="取消"
           >
             <a>删除</a>
